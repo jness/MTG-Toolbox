@@ -6,7 +6,7 @@
   function drawVisualization() {
     // Create and populate the data table.
     var data = google.visualization.arrayToDataTable([
-      ['x', '{{ card.card_name }}'],
+      ['x', 'Average Price'],
       
       {% for price in prices %}
         ['{{ price.created.month }}/{{ price.created.day }}', {{ price.avg }},],
