@@ -32,7 +32,14 @@ class CardSetView(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         db_set = MTGSet.objects.get(label=self.context['set'])
-        self.context['cards'] = MTGCard.objects.filter(set=db_set)
+        cards = MTGCard.objects.filter(set=db_set)
+        for card in cards:
+            prices = MTGPrice.objects.filter(card=card)
+            if prices:
+                card.prices = prices.latest('created')
+            else:
+                card.prices = None
+        self.context['cards'] = cards
         return self.context
     
 class CardView(BaseTemplateView):
