@@ -1,0 +1,107 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+{% include 'googleChart.html' %}
+
+<div class="container">
+  <div class="content">
+
+  <h1>{{ card }}</h1><hr>
+  <table cellpadding=5 cellspacing=5>
+    
+    <tr>
+      <td width=115><b>Type:</b></td>
+      <td>{{ card.type }}</td>
+    </tr>
+    
+    {% if card.cost %}
+    <tr>
+      <td><b>Cost:</b></td>
+      <td>{{ card.cost }}</td>
+    </tr>
+    {% endif %}
+    
+    <tr>
+      <td><b>Rarity:</b></td>
+      <td>{{ card.rarity }}</td>
+    </tr>
+    
+    {% if card.power and card.toughness %}
+    <tr>
+      <td><b>P/T:</b></td>
+      <td>{{ card.power }} / {{ card.toughness }}</td>
+    </tr>
+  {% endif %}
+  
+    <tr>
+      <td><b>Set:</b></td>
+      <td><a href='{% url card_set_view card.set.label %}'>{{ card.set }}</a></td>
+    </tr>
+    
+    <tr>
+      <td><b>Artist:</b></td>
+      <td>{{ card.artist }}</td>
+    </tr>
+    
+  </table>
+  
+  <hr>
+  <table cellpadding=5 cellspacing=5>
+    <tr>
+      <td width=115><b>Gatherer:</b></td>
+      <td><a href='http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid={{ card.multiverse_id }}'>{{ card.multiverse_id }}</td>
+    </tr>
+    
+    <tr>
+      <td><b>Magic Cards:</b></td>
+      <td><a href='http://magiccards.info/{{ card.set.label }}/en/{{ card.card_id }}.html'>{{ card.card_id }}</td>
+    </tr>
+    
+    <tr>
+      <td><b>TCGPlayer:</b></td>
+      <td><a href='http://store.tcgplayer.com/Product.aspx?id={{ card.tcgplayer_id }}'>{{ card.tcgplayer_id }}</td>
+    </tr>
+    
+  </table>
+  
+  <hr>
+  <table cellpadding=5 cellspacing=5 width=100%>
+    <tr>
+    <td width=225 align=center>
+      {% if latest_prices %}
+        <table cellpadding=7>
+          <tr>
+            <td><b>Low</b></td>
+            <td><b>Avg</b></td>
+            <td><b>High</b></td>
+          </tr>
+          
+          <tr>
+            <td>{{ latest_prices.low }}</td>
+            <td>{{ latest_prices.avg }}</td>
+            <td>{{ latest_prices.high }}</td>
+          </tr>
+        </table>
+      {% endif %}
+      <img src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.multiverse_id }}&type=card' />
+    
+        <br><font size=1><i>All prices provided from <a href='http://tcgplayer.com'>TCGPlayer.com</a></i></font>
+    </td>
+    
+    <td align=center>
+      {% if prices %}
+        <h4>Trending TCGPlayer Average Price</h4>
+        <div id="visualization" style="width: 600px; height: 300px;"></div>
+      {% endif %}
+      
+      {% if user.is_authenticated %}
+      <a class="btn btn-info" href="{% url get_card_view card.id %}">
+            <i class="icon-repeat icon-white"></i> Update Prices
+      </a>
+      {% endif %}
+    </td>
+  </table>
+    
+  </div>
+</div>
+
+{% include 'foot.html' %}

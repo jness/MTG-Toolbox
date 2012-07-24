@@ -1,0 +1,30 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+
+<div class="container">
+  <div class="content">
+
+    <table class="table table-striped" id="table">
+      <thead><tr>
+        <th><b>Label <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Display Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+      </tr></thead>
+      <tbody>
+      {% for label, display_name in my_sets %}
+        <tr>    
+          <td><a href='{% url card_set_view label %}'><b>{{ label }}</b></a></td>
+          <td><a href='{% url card_set_view label %}'>{{ display_name }}</a>
+          {% if user.is_authenticated %}
+            <a href='{% url add_card_view label %}'>
+                <i class="icon-refresh"></i>
+            </a>
+          {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+{% include 'foot.html' %}

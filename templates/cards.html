@@ -1,0 +1,28 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+
+<div class="container">
+  <div class="content">
+
+    <table class="table table-striped" id="table">
+      <thead><tr>
+        <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Type <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Rarity <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+      </tr></thead>
+      <tbody>
+      {% for card in cards %}
+        <tr>       
+          <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
+          <td>{{ card.type }}</td>
+          <td>{{ card.rarity }}</td>
+          <td>{{ card.set }}</td>
+        </td>
+      {% endfor %}
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+{% include 'foot.html' %}

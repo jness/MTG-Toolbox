@@ -1,0 +1,36 @@
+<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+      
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand">
+	  <font color=grey><i>[ <font size=2>Beta</font> ]</i></font> MTG Toolbox</a>
+
+	  {% if user.is_authenticated %}
+	    <p class="navbar-text pull-right"><font size=2>
+	    Welcome <b>{{ user }}</b></font>
+	    <a href='{% url logout_view %}'><i class="icon-remove icon-white"></i></a>
+	  {% else %}
+	    <p class="navbar-text pull-right">
+		  <a href='/admin'><font size=2>Login</font></a>
+	  {% endif %}
+        </div>
+        
+        <div class="container">
+          <ul class="nav">
+           
+	   <!-- start menu bar entires -->
+	   {% if user.is_authenticated %}
+      	     <li><a href="{% url show_set_view %}">Add Sets</a></li>
+	    {% endif %}
+	    <li><a href="{% url my_set_view %}">Sets</a></li>
+
+	  </ul>
+        </div>
+      
+      </div>
+    </div>

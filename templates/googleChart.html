@@ -1,0 +1,25 @@
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load('visualization', '1', {packages: ['corechart']});
+</script>
+<script type="text/javascript">
+  function drawVisualization() {
+    // Create and populate the data table.
+    var data = google.visualization.arrayToDataTable([
+      ['x', '{{ card.card_name }}'],
+      
+      {% for price in prices %}
+        ['{{ price.created.month }}/{{ price.created.day }}', {{ price.avg }},],
+      {% endfor %}
+        
+      ]);
+  
+    // Create and draw the visualization.
+    new google.visualization.LineChart(document.getElementById('visualization')).
+        draw(data, {curveType: "function",
+                    width: 600, height: 300}
+            );
+  }
+
+  google.setOnLoadCallback(drawVisualization);
+</script>
