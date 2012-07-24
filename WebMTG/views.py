@@ -9,6 +9,13 @@ from magiccardsinfo.Card import Card
 from magiccardsinfo.Identifiers import Identifiers
 from magiccardsinfo.Price import Price
     
+class HomeView(BaseTemplateView):
+    'View for the home page'
+    
+    template_name = "home.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        return self.context
         
 class MySetView(BaseTemplateView):
     'View for listing all sets you have imported from magiccards.info'
