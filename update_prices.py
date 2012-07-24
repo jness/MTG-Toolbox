@@ -2,11 +2,17 @@ from django.core.management import setup_environ
 import settings
 setup_environ(settings)
 
-from WebMTG.models import MTGPrice, MTGCard
+from WebMTG.models import MTGPrice, MTGCard, MTGSet
 from magiccardsinfo.Price import Price
+import sys
 
-# All cards in our collection
-cards = MTGCard.objects.all()
+# see if we need to scan all or just one set
+try:
+    set_input = sys.argv[1]
+    set = MTGSet.objects.get(label=set_input)
+    cards = MTGCard.objects.filter(set=set)
+except IndexError:
+    cards = MTGCard.objects.all()
 
 for card in cards:
 
