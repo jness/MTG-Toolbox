@@ -12,11 +12,11 @@
         <th><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
-      {% for value, card in cards %}
+      {% for p in cards %}
         <tr>       
-          <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
-          <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
-          <td>{{ value }}</font></td>
+          <td><a href='{% url card_view id=p.card.id %}'>{{ p.card.card_name }}</a></td>
+          <td><a href='{% url card_set_view set=p.card.set.label %}'>{{ p.card.set }}</a></td>
+          <td>{{ p.avg }}</font></td>
         </td>
       {% endfor %}
       </tbody>

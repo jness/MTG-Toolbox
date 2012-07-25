@@ -24,24 +24,9 @@ class TopToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        top_cards = []
-        cards = MTGCard.objects.all()
-        for card in cards:
-            prices = MTGPrice.objects.filter(card=card)
-            if prices:
-                prices = prices.latest('created')
-            else:
-                continue
-            
-            top_cards.append((float(prices.avg), card))
+        latest = MTGPrice.objects.order_by('created').distinct('card')
         
-        top_cards.sort()
-        top_cards.reverse()
-        top_cards = top_cards[0:50]
-        
-        top =  [ ("%.2f" % round(i[0],2), i[1]) for i in top_cards ]
-        
-        self.context['cards'] = top
+        self.context['cards'] = latest.order_by('-avg')[0:50]
         return self.context    
     
 class CardDecreasedToday(BaseTemplateView):
