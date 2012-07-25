@@ -13,9 +13,9 @@
       <tbody>
       {% for card, value in cards %}
         <tr>       
-          <td>{{ card.card_name }}</td>
-          <td>{{ card.set }}</td>
-          <td>{{ value }}</td>
+          <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
+          <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
+          <td><font color=00CC33>{{ value }}</font></td>
         </td>
       {% endfor %}
       </tbody>

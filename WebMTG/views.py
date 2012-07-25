@@ -31,7 +31,7 @@ class CardIncreaseToday(BaseTemplateView):
             if len(prices) == 2:
                 if float(prices[0].avg) > float(prices[1].avg):
                     increase = float(prices[0].avg) - float(prices[1].avg)
-                    up_cards.append((card, round(increase, 2)))
+                    up_cards.append((card, "%.2f" % round(increase,2)))
         
         self.context['cards'] = up_cards
         return self.context
@@ -69,11 +69,14 @@ class CardView(BaseTemplateView):
         self.create_context(**kwargs)
         self.context['card'] = MTGCard.objects.get(id=self.context['id'])
         prices = MTGPrice.objects.filter(card=self.context['card'])
-        self.context['prices'] = prices.order_by('-created')[:7]
         if prices:
             self.context['latest_prices'] = prices.latest('created')
         else:
             self.context['latest_prices'] = None
+            
+        price_list = prices.order_by('-created')[:7]
+        price_list = price_list.reverse()
+        self.context['prices'] = price_list
         return self.context
     
 class GetCardPrices(BaseRedirectView):
