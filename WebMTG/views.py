@@ -151,7 +151,7 @@ class AddCardView(BaseRedirectView):
         # get our set object from our model and card for a given
         # set from tcgplayer.
         db_set = MTGSet.objects.get(label=self.context['set'])
-        cards = Card(set=self.context['set']).getCards()
+        cards = Card(set=db_set.display_name).getCards()
         
         # add the cards to our model        
         for card in cards:
