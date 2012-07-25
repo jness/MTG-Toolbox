@@ -1,0 +1,26 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+
+<div class="container">
+  <div class="content">
+    
+    <table class="table table-striped" id="table">
+      <thead><tr>
+        <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Increased By <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+      </tr></thead>
+      <tbody>
+      {% for card, value in cards %}
+        <tr>       
+          <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
+          <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
+          <td><font color=red>{{ value }}</font></td>
+        </td>
+      {% endfor %}
+      </tbody>
+    </table>
+    
+  </div>
+</div>
+{% include 'foot_increase.html' %}

@@ -1,6 +1,6 @@
 from WebMTG.views import ShowSetView, AddSetView, MySetView, AddCardView
 from WebMTG.views import CardSetView, CardView, LogoutView, GetCardPrices
-from WebMTG.views import HomeView, CardIncreaseToday
+from WebMTG.views import HomeView, CardIncreaseToday, CardDecreasedToday
 
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url('^$', HomeView.as_view(), name='home_view'),
     url('^sets/$', MySetView.as_view(), name='my_set_view'),
     url('^increased/$', CardIncreaseToday.as_view(), name='increased_view'),
+    url('^decreased/$', CardDecreasedToday.as_view(), name='decreased_view'),
     url('^cards/(?P<set>[\w]+)/$', CardSetView.as_view(), name='card_set_view'),
     url('^card/(?P<id>[\d]+)/$', CardView.as_view(), name='card_view'),
     url(r'^logout/$', LogoutView.as_view(), name='logout_view'),

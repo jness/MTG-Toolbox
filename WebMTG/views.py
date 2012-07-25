@@ -17,6 +17,25 @@ class HomeView(BaseTemplateView):
         self.create_context(**kwargs)
         return self.context
     
+class CardDecreasedToday(BaseTemplateView):
+    'View for listing top 100 cards that have decreased from yesterday'
+    
+    template_name = "decreased.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        
+        down_cards = []
+        cards = MTGCard.objects.all()
+        for card in cards:
+            prices = MTGPrice.objects.filter(card=card).order_by('-created')[:2]
+            if len(prices) == 2:
+                if float(prices[0].avg) < float(prices[1].avg):
+                    increase = float(prices[1].avg) - float(prices[0].avg)
+                    down_cards.append((card, "%.2f" % round(increase,2)))
+        
+        self.context['cards'] = down_cards
+        return self.context    
+
 class CardIncreaseToday(BaseTemplateView):
     'View for listing top 100 cards that have increased from yesterday'
     
