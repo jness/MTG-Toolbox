@@ -16,7 +16,26 @@ class HomeView(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         return self.context
+    
+class CardIncreaseToday(BaseTemplateView):
+    'View for listing top 100 cards that have increased from yesterday'
+    
+    template_name = "increased.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
         
+        up_cards = []
+        cards = MTGCard.objects.all()
+        for card in cards:
+            prices = MTGPrice.objects.filter(card=card).order_by('-created')[:2]
+            if len(prices) == 2:
+                if float(prices[0].avg) > float(prices[1].avg):
+                    increase = float(prices[0].avg) - float(prices[1].avg)
+                    up_cards.append((card, round(increase, 2)))
+        
+        self.context['cards'] = up_cards
+        return self.context
+
 class MySetView(BaseTemplateView):
     'View for listing all sets you have imported from magiccards.info'
     
