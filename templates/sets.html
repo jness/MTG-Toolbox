@@ -7,7 +7,6 @@
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Label <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Display Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
       {% for label, display_name in sets %}
@@ -16,7 +15,6 @@
                 <i class='icon-plus'></i></a>
                 {{ label }}
           </td>
-          <td>{{ display_name }}</td>
         </tr>
       {% endfor %}
       </tbody>

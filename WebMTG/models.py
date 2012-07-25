@@ -10,16 +10,9 @@ class MTGSet(models.Model):
         return self.display_name
     
 class MTGCard(models.Model):
-    card_id = models.CharField(max_length=5)
-    multiverse_id = models.IntegerField()
-    tcgplayer_id = models.IntegerField()
     card_name = models.CharField(max_length=75)
-    type = models.CharField(max_length=100)
     cost = models.CharField(max_length=10, null=True)
-    artist = models.CharField(max_length=100)
     rarity = models.CharField(max_length=50)
-    power = models.CharField(max_length=10, null=True)
-    toughness = models.CharField(max_length=10, null=True)
     set = models.ForeignKey(MTGSet)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

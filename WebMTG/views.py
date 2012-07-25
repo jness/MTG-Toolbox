@@ -4,10 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice
-from magiccardsinfo.Set import Set
-from magiccardsinfo.Card import Card
-from magiccardsinfo.Identifiers import Identifiers
-from magiccardsinfo.Price import Price
+
+from TCGPlayer.Magic import Set, Card
     
 class HomeView(BaseTemplateView):
     'View for the home page'
@@ -56,7 +54,7 @@ class CardIncreaseToday(BaseTemplateView):
         return self.context
 
 class MySetView(BaseTemplateView):
-    'View for listing all sets you have imported from magiccards.info'
+    'View for listing all sets you have imported from tcgplayer'
     
     template_name = "mysets.html"
     def get_context_data(self, **kwargs):
@@ -88,6 +86,7 @@ class CardView(BaseTemplateView):
         self.create_context(**kwargs)
         self.context['card'] = MTGCard.objects.get(id=self.context['id'])
         prices = MTGPrice.objects.filter(card=self.context['card'])
+        
         if prices:
             self.context['latest_prices'] = prices.latest('created')
         else:
@@ -106,13 +105,15 @@ class GetCardPrices(BaseRedirectView):
     def get_redirect_url(self, **kwargs):
         self.create_context(**kwargs)
         card = MTGCard.objects.get(id=self.context['id'])
-        prices = Price(id=card.tcgplayer_id).getPrices()
+        c = Card(set=card.set.label)
+        prices = c.getCard(card=card.card_name)
+        
         MTGPrice.objects.create(card=card, low=prices['low'], avg=prices['avg'],
                                 high=prices['high'])
         return reverse('card_view', kwargs={'id': card.id})
     
 class ShowSetView(BaseTemplateView):
-    'View for listing all sets from magiccards.info'
+    'View for listing all sets from tcgplayer'
     
     template_name = "sets.html"
     def get_context_data(self, **kwargs):
@@ -148,24 +149,21 @@ class AddCardView(BaseRedirectView):
         self.create_context(**kwargs)
         
         # get our set object from our model and card for a given
-        # set from magiccards.info.
+        # set from tcgplayer.
         db_set = MTGSet.objects.get(label=self.context['set'])
         cards = Card(set=self.context['set']).getCards()
-    
+        
         # add the cards to our model        
         for card in cards:
-            # skip basic lands
-            if 'Basic Land' not in cards[card]['type']:
-                cards[card]['set_id'] = db_set.id
-                
-                # get the external id's for a card
-                i = Identifiers(set=self.context['set'],
-                               id=cards[card]['card_id'])
-                cards[card]['multiverse_id'] = i.getGathererId()
-                cards[card]['tcgplayer_id'] = i.getTCGPlayerId()
-                
-                c, created = MTGCard.objects.get_or_create(**cards[card])
-                c.save()
+            cards[card]['set'] = db_set
+            
+            # remove prices from dict
+            del(cards[card]['low'])
+            del(cards[card]['avg'])
+            del(cards[card]['high'])
+            
+            c, created = MTGCard.objects.get_or_create(**cards[card])
+            c.save()
         return reverse('card_set_view', kwargs={'set': self.context['set']})
         
 class LogoutView(BaseRedirectView):
