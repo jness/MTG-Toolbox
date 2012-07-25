@@ -157,7 +157,7 @@ class AddSetView(BaseRedirectView):
         # be sure not to add a duplicate set.
         display_name = sets.get(self.context['set'])
         if display_name:
-            stuple = (self.context['set'], display_name)
+            stuple = (self.context['set'], display_name, magiccards_info)
             if stuple not in self.context['my_sets']:
                 MTGSet.objects.create(label=self.context['set'],
                                       display_name=display_name,
