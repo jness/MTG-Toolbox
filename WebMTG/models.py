@@ -27,9 +27,9 @@ class MTGCard(models.Model):
     
 class MTGPrice(models.Model):
     card = models.ForeignKey(MTGCard)
-    low = models.CharField(max_length=20)
-    avg = models.CharField(max_length=20)
-    high = models.CharField(max_length=20)
+    low = models.DecimalField()
+    avg = models.DecimalField()
+    high = models.DecimalField()
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     
