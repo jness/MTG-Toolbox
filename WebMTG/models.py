@@ -11,7 +11,7 @@ class MTGSet(models.Model):
     
 class MTGCard(models.Model):
     card_name = models.CharField(max_length=75)
-    cost = models.CharField(max_length=10, null=True)
+    cost = models.CharField(max_length=20, null=True)
     rarity = models.CharField(max_length=50)
     set = models.ForeignKey(MTGSet)
     created = models.DateTimeField(auto_now_add=True)
@@ -22,9 +22,9 @@ class MTGCard(models.Model):
     
 class MTGPrice(models.Model):
     card = models.ForeignKey(MTGCard)
-    low = models.CharField(max_length=10)
-    avg = models.CharField(max_length=10)
-    high = models.CharField(max_length=10)
+    low = models.CharField(max_length=20)
+    avg = models.CharField(max_length=20)
+    high = models.CharField(max_length=20)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     
