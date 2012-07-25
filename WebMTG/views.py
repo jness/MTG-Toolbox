@@ -28,12 +28,16 @@ class TopToday(BaseTemplateView):
         cards = MTGCard.objects.all()
         for card in cards:
             prices = MTGPrice.objects.filter(card=card).latest('created')
-            top_cards.append((prices.avg, card))
+            top_cards.append((float(prices.avg), card))
         
+        print len(top_cards)
         top_cards.sort()
         top_cards.reverse()
+        top_cards = top_cards[0:50]
         
-        self.context['cards'] = top_cards[0:50]
+        top =  [ ("%.2f" % round(i[0],2), i[1]) for i in top_cards ]
+        
+        self.context['cards'] = top
         return self.context    
     
 class CardDecreasedToday(BaseTemplateView):
