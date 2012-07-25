@@ -27,10 +27,14 @@ class TopToday(BaseTemplateView):
         top_cards = []
         cards = MTGCard.objects.all()
         for card in cards:
-            prices = MTGPrice.objects.filter(card=card).latest('created')
+            prices = MTGPrice.objects.filter(card=card)
+            if prices:
+                prices = prices.latest('created')
+            else:
+                continue
+            
             top_cards.append((float(prices.avg), card))
         
-        print len(top_cards)
         top_cards.sort()
         top_cards.reverse()
         top_cards = top_cards[0:50]
@@ -158,7 +162,6 @@ class AddSetView(BaseRedirectView):
         for key, value in sets:
             if word in value:
                 matches.append((key, value))
-        print matches
         return matches
         
     
