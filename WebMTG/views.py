@@ -6,6 +6,9 @@ from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice
 
 from TCGPlayer.Magic import Set, Card
+from magiccardsinfo.Set import Set as MagiccardsSet
+from magiccardsinfo.Card import Card as MagiccardsCard
+from magiccardsinfo.Identifiers import Identifiers
     
 class HomeView(BaseTemplateView):
     'View for the home page'
@@ -127,35 +130,82 @@ class AddSetView(BaseRedirectView):
     
     permanent = False
     query_string = True
+    
+    def identify_set(self, word=None, sets=None):
+        matches = []
+        for key, value in sets:
+            if word in value:
+                matches.append((key, value))
+        print matches
+        return matches
+        
+    
     def get_redirect_url(self, **kwargs):
         self.create_context(**kwargs)
         sets = Set().getSets()
         
+        # get Magiccards.info set abbreviation
+        magiccards_info = None
+        s = self.context['set']
+        magiccardsets = MagiccardsSet().getSets().items()
+        for word in s.split():
+            magiccardsets = self.identify_set(word=word, sets=magiccardsets)
+            if len(magiccardsets) == 1:
+                magiccards_info = magiccardsets[0][0]
+                break
+                    
         # be sure not to add a duplicate set.
         display_name = sets.get(self.context['set'])
         if display_name:
             stuple = (self.context['set'], display_name)
             if stuple not in self.context['my_sets']:
                 MTGSet.objects.create(label=self.context['set'],
-                                      display_name=display_name)
+                                      display_name=display_name,
+                                      magiccards_info=magiccards_info)
         return reverse('my_set_view')
   
-class AddCardView(BaseRedirectView):
+class AddCardView(BaseTemplateView):
     'Add all cards in a given set to our Card collection'
     
-    permanent = False
-    query_string = True
-    def get_redirect_url(self, **kwargs):
+    template_name = "log.html"
+    def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
         # get our set object from our model and card for a given
         # set from tcgplayer.
         db_set = MTGSet.objects.get(label=self.context['set'])
-        cards = Card(set=db_set.display_name).getCards()
+        magiccards_set = MagiccardsCard(set=db_set.magiccards_info)
         
+        cards = Card(set=db_set.label).getCards()
+        
+        messages = []
         # add the cards to our model        
         for card in cards:
+            
+            # Lookup card name on magiccards info
+            name = cards[card]['card_name']
+            try:
+                message = 'Found card %s on Magiccard Info' % name
+                messages.append(message)
+                magiccards_card = magiccards_set.getCard(name=name)
+            except:
+                message = '!! Failed Magiccard Info lookup for %s !!' % name
+                messages.append(message)
+                continue
+            
+            # get card details from magiccards info
+            i = Identifiers(set=db_set.magiccards_info,
+                            id=magiccards_card['card_id'])
+            gatherer_id = i.getGathererId()
+            tcgplayer_id = i.getTCGPlayerId()
+            cards[card]['gatherer_id'] = gatherer_id
+            cards[card]['tcgplayer_id'] = tcgplayer_id
+            
+            # magiccardsinfo has better data
             cards[card]['set'] = db_set
+            cards[card]['magiccard_id'] = magiccards_card['card_id']
+            cards[card]['type'] = magiccards_card['type']
+            cards[card]['rarity'] = magiccards_card['rarity']
             
             # remove prices from dict
             del(cards[card]['low'])
@@ -164,7 +214,9 @@ class AddCardView(BaseRedirectView):
             
             c, created = MTGCard.objects.get_or_create(**cards[card])
             c.save()
-        return reverse('card_set_view', kwargs={'set': self.context['set']})
+            
+        self.context['log'] = messages
+        return self.context
         
 class LogoutView(BaseRedirectView):
     'For all your logging out needs'

@@ -8,6 +8,11 @@
   <h1>{{ card }}</h1><hr>
   <table cellpadding=5 cellspacing=5>
     
+    <tr>
+      <td><b>Type:</b></td>
+      <td>{{ card.type }}</td>
+    </tr>
+    
     {% if card.cost %}
     <tr>
       <td><b>Cost:</b></td>
@@ -34,11 +39,47 @@
     
   </table>
   
-  <hr>
+   <hr>
+  <table cellpadding=5 cellspacing=5>
+    <tr>
+      <td width=115><b>Gatherer:</b></td>
+      <td><a href='http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid={{ card.gatherer_id }}'>{{ card.gatherer_id }}</td>
+    </tr>
+    
+    <tr>
+      <td><b>Magic Cards:</b></td>
+      <td><a href='http://magiccards.info/{{ card.set.magiccards_info }}/en/{{ card.magiccard_id }}.html'>{{ card.magiccard_id }}</td>
+    </tr>
+    
+    <tr>
+      <td><b>TCGPlayer:</b></td>
+      <td><a href='http://store.tcgplayer.com/Product.aspx?id={{ card.tcgplayer_id }}'>{{ card.tcgplayer_id }}</td>
+    </tr>
+    
+  </table>
+  
+ <hr>
   <table cellpadding=5 cellspacing=5 width=100%>
     <tr>
-    <td width=250>
-      <iframe frameBorder=0 scrolling=no width=250 height=400 src='http://magic.tcgplayer.com/db/wp-ch.asp?cn={{ card.card_name }}&sn={{ card.set.label }}'></iframe>
+    <td width=225 align=center>
+      {% if latest_prices %}
+        <table cellpadding=7>
+          <tr>
+            <td><b>Low</b></td>
+            <td><b>Avg</b></td>
+            <td><b>High</b></td>
+          </tr>
+          
+          <tr>
+            <td>${{ latest_prices.low }}</td>
+            <td>${{ latest_prices.avg }}</td>
+            <td>${{ latest_prices.high }}</td>
+          </tr>
+        </table>
+      {% endif %}
+      <img src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card' />
+    
+        <br><font size=1><i>All prices provided from <a href='http://tcgplayer.com'>TCGPlayer.com</a></i></font>
     </td>
     
     <td align=center>

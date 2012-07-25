@@ -8,9 +8,10 @@
       <thead><tr>
         <th><b>Label <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Display Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Abbreviation <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
-      {% for label, display_name in my_sets %}
+      {% for label, display_name, abbr in my_sets %}
         <tr>    
           <td><a href='{% url card_set_view label %}'><b>{{ label }}</b></a></td>
           <td><a href='{% url card_set_view label %}'>{{ display_name }}</a>
@@ -20,6 +21,7 @@
             </a>
           {% endif %}
           </td>
+          <td>{{ abbr }}</td>
         </tr>
       {% endfor %}
       </tbody>

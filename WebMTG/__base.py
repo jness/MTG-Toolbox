@@ -7,7 +7,7 @@ class BaseTemplateView(TemplateView):
     def create_context(self, **kwargs):
         'Create our context and add our kwargs to it'
         self.context = {}
-        self.context['my_sets'] = [ (i.label, i.display_name) \
+        self.context['my_sets'] = [ (i.label, i.display_name, i.magiccards_info) \
                                     for i in MTGSet.objects.all() ]
         for k in kwargs:
             self.context[k] = kwargs[k]
@@ -18,7 +18,7 @@ class BaseRedirectView(RedirectView):
     def create_context(self, **kwargs):
         'Create our context and add our kwargs to it'
         self.context = {}
-        self.context['my_sets'] = [ (i.label, i.display_name) \
+        self.context['my_sets'] = [ (i.label, i.display_name, i.magiccards_info) \
                                     for i in MTGSet.objects.all() ]
         for k in kwargs:
             self.context[k] = kwargs[k]
