@@ -18,6 +18,24 @@ class HomeView(BaseTemplateView):
         self.create_context(**kwargs)
         return self.context
     
+class TopToday(BaseTemplateView):
+    'View for the top 50 expensive cards'
+    template_name = "top.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        
+        top_cards = []
+        cards = MTGCard.objects.all()
+        for card in cards:
+            prices = MTGPrice.objects.filter(card=card).latest('created')
+            top_cards.append((prices.avg, card))
+        
+        top_cards.sort()
+        top_cards.reverse()
+        
+        self.context['cards'] = top_cards[0:50]
+        return self.context    
+    
 class CardDecreasedToday(BaseTemplateView):
     'View for listing top 100 cards that have decreased from yesterday'
     
@@ -34,7 +52,7 @@ class CardDecreasedToday(BaseTemplateView):
                     increase = float(prices[1].avg) - float(prices[0].avg)
                     down_cards.append((card, "%.2f" % round(increase,2)))
         
-        self.context['cards'] = down_cards
+        self.context['cards'] = down_cards[0:100]
         return self.context    
 
 class CardIncreaseToday(BaseTemplateView):
@@ -53,7 +71,7 @@ class CardIncreaseToday(BaseTemplateView):
                     increase = float(prices[0].avg) - float(prices[1].avg)
                     up_cards.append((card, "%.2f" % round(increase,2)))
         
-        self.context['cards'] = up_cards
+        self.context['cards'] = up_cards[0:100]
         return self.context
 
 class MySetView(BaseTemplateView):

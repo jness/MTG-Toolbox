@@ -4,6 +4,8 @@
 <div class="container">
   <div class="content">
     
+    <h2>Decreasing Card Trends</h2>
+    
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
@@ -15,7 +17,7 @@
         <tr>       
           <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
           <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
-          <td><font color=red>{{ value }}</font></td>
+          <td>{{ value }}</td>
         </td>
       {% endfor %}
       </tbody>

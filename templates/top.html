@@ -4,19 +4,19 @@
 <div class="container">
   <div class="content">
     
-    <h2>Increasing Card Trends</h2>
+    <h2>50 Most Expensive Cards</h2>
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Increased By <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
-      {% for card, value in cards %}
+      {% for value, card in cards %}
         <tr>       
           <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
           <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
-          <td>{{ value }}</td>
+          <td>{{ value }}</font></td>
         </td>
       {% endfor %}
       </tbody>
