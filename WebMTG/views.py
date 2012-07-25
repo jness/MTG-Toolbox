@@ -24,7 +24,11 @@ class TopToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        latest = MTGPrice.objects.order_by('created').distinct('card')
+        # latest entry gives us the last run
+        l = MTGPrice.objects.all().latest('created').created
+        latest = MTGPrice.objects.filter(created__day=l.day,
+                                         created__month=l.month,
+                                         created__year=l.year)
         
         self.context['cards'] = latest.order_by('-avg')[0:50]
         return self.context    
