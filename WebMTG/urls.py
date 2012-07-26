@@ -3,6 +3,8 @@ from WebMTG.views import CardSetView, CardView, LogoutView, GetCardPrices
 from WebMTG.views import HomeView, CardIncreaseToday, CardDecreasedToday
 from WebMTG.views import TopToday
 
+from WebMTG.feeds import Top50Feed, CardFeed
+
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
@@ -28,6 +30,10 @@ urlpatterns = patterns('',
             login_required(AddCardView.as_view()), name='add_card_view'),
     url('^get_prices/(?P<id>[\d]+)/$',
             login_required(GetCardPrices.as_view()), name='get_card_view'),
+    
+    # feeds
+    url(r'^top/feed/$', Top50Feed(), name='top_feed'),
+    url(r'^card/(?P<id>[\d]+)/feed/$', CardFeed(), name='card_feed'),
     
     # Admin Page
     url(r'^admin/', include(admin.site.urls)),
