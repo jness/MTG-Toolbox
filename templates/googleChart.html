@@ -9,7 +9,7 @@
       ['x', 'Average Price'],
       
       {% for price in prices %}
-        ['{{ price.created.month }}/{{ price.created.day }}', {{ price.avg }},],
+        ['{{ price.modified.month }}/{{ price.modified.day }}', {{ price.avg }},],
       {% endfor %}
         
       ]);
