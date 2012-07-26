@@ -5,6 +5,7 @@
 <div class="container">
   <div class="content">
 
+<ul class="hoverbox">
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
@@ -16,7 +17,12 @@
       <tbody>
       {% for card in cards %}
         <tr>       
-          <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
+          <td><a class="hoverbox" onmouseover="this.children[0].src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card'"
+          href='{% url card_view id=card.id %}'>{{ card.card_name }}
+           <img class="preview" src='about:blank'>
+          </a></td>
+          
+          
           <td>{{ card.type }}</td>
           <td>
             {% if card.avg %}
@@ -29,6 +35,7 @@
       {% endfor %}
       </tbody>
     </table>
+</ul>
     
   </div>
 </div>
