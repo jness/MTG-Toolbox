@@ -1,5 +1,6 @@
 {% include 'head.html' %}
 {% include 'menu.html' %}
+{% load tools %}
 
 <div class="container">
   <div class="content">
@@ -17,8 +18,8 @@
           <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
           <td>{{ card.type }}</td>
           <td>
-            {% if card.prices.avg %}
-              {{ card.prices.avg }}
+            {% if card.avg %}
+              {{ card.avg|price }}
             {% endif %}
           </td>
           <td>{{ card.set }}</td>

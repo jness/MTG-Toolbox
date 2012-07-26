@@ -1,6 +1,7 @@
 {% include 'head.html' %}
 {% include 'menu.html' %}
 {% include 'googleChart.html' %}
+{% load tools %}
 
 <div class="container">
   <div class="content">
@@ -62,7 +63,7 @@
   <table cellpadding=5 cellspacing=5 width=100%>
     <tr>
     <td width=225 align=center>
-      {% if latest_prices %}
+      {% if card.avg %}
         <table cellpadding=7>
           <tr>
             <td><b>Low</b></td>
@@ -71,9 +72,9 @@
           </tr>
           
           <tr>
-            <td>${{ latest_prices.low }}</td>
-            <td>${{ latest_prices.avg }}</td>
-            <td>${{ latest_prices.high }}</td>
+            <td>${{ card.low|price }}</td>
+            <td>${{ card.avg|price }}</td>
+            <td>${{ card.high|price }}</td>
           </tr>
         </table>
       {% endif %}
@@ -85,7 +86,7 @@
     <td align=center>
       {% if prices %}
         <h4>Trending TCGPlayer Average Price</h4>
-        <font size=1><i>updated @ {{ latest_prices.created }} server time</i></font>
+        <font size=1><i>updated @ {{ card.modified }} server time</i></font>
         <div id="visualization" style="width: 600px; height: 300px;"></div>
       {% endif %}
       

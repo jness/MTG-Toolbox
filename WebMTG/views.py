@@ -24,14 +24,8 @@ class TopToday(BaseTemplateView):
     template_name = "top.html"
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
-        
-        # latest entry gives us the last run
-        l = MTGPrice.objects.all().latest('created').created
-        latest = MTGPrice.objects.filter(created__day=l.day,
-                                         created__month=l.month,
-                                         created__year=l.year)
-        
-        self.context['cards'] = latest.order_by('-avg')[0:50]
+        cards = MTGCard.objects.all().order_by('-avg')
+        self.context['cards'] = cards[0:50]
         return self.context
     
 class CardDecreasedToday(BaseTemplateView):
@@ -51,7 +45,7 @@ class CardDecreasedToday(BaseTemplateView):
             
             if card.avg < prev.avg:
                 dif = float(prev.avg) - float(card.avg)
-                down_cards.append((card, "%.2f" % round(dif,2)))
+                down_cards.append((card, dif))
         
         down_cards.sort()
         down_cards.reverse()
@@ -76,7 +70,7 @@ class CardIncreaseToday(BaseTemplateView):
             
             if card.avg > prev.avg:
                 dif = float(card.avg) - float(prev.avg)
-                up_cards.append((card, "%.2f" % round(dif,2)))
+                up_cards.append((card, dif))
         
         up_cards.sort()
         up_cards.reverse()
@@ -100,12 +94,6 @@ class CardSetView(BaseTemplateView):
         self.create_context(**kwargs)
         db_set = MTGSet.objects.get(label=self.context['set'])
         cards = MTGCard.objects.filter(set=db_set)
-        for card in cards:
-            prices = MTGPrice.objects.filter(card=card)
-            if prices:
-                card.prices = prices.latest('created')
-            else:
-                card.prices = None
         self.context['cards'] = cards
         return self.context
     
@@ -118,13 +106,11 @@ class CardView(BaseTemplateView):
         self.context['card'] = MTGCard.objects.get(id=self.context['id'])
         prices = MTGPrice.objects.filter(card=self.context['card'])
         
-        if prices:
-            self.context['latest_prices'] = prices.latest('created')
-        else:
-            self.context['latest_prices'] = None
-            
         price_list = prices.order_by('-created')[:7]
         price_list = price_list.reverse()
+        price_list = list(price_list)
+        # add our card to the price list
+        price_list.append(self.context['card']) 
         self.context['prices'] = price_list
         return self.context
     
@@ -139,8 +125,17 @@ class GetCardPrices(BaseRedirectView):
         c = Card(set=card.set.label)
         prices = c.getCard(card=card.card_name)
         
-        MTGPrice.objects.create(card=card, low=prices['low'], avg=prices['avg'],
-                                high=prices['high'])
+        # Move the card objects current prices to history
+        MTGPrice.objects.create(card=card, low=card.low, avg=card.avg,
+                                high=card.high, created=card.modified,
+                                modified=card.modified)
+        
+        # update card object with latest
+        card.low = prices['low']
+        card.avg = prices['avg']
+        card.high = prices['high']
+        card.save()
+        
         return reverse('card_view', kwargs={'id': card.id})
     
 class ShowSetView(BaseTemplateView):
