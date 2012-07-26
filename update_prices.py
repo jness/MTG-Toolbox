@@ -21,8 +21,15 @@ for set in sets:
     
         print 'Found the following prices %s' % prices
     
-        # Update with the price
-        MTGPrice.objects.create(card=card, low=prices['low'],
-                                avg=prices['avg'], high=prices['high'])
+        # Move the card objects current prices to history
+        MTGPrice.objects.create(card=card, low=card.low, avg=card.avg,
+                                high=card.high, created=card.modified,
+                                modified=card.modified)
+        
+        # update card object with latest
+        card.low = prices['low']
+        card.avg = prices['avg']
+        card.high = prices['high']
+        card.save()
     
         print 'Successfully updated Price database'
