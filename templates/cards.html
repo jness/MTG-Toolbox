@@ -10,6 +10,7 @@
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Type <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Price Fluctuation <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
@@ -22,6 +23,7 @@
               {{ card.avg|price }}
             {% endif %}
           </td>
+          <td>{{ card|upordown|safe }}</td>
           <td>{{ card.set }}</td>
         </td>
       {% endfor %}

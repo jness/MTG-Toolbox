@@ -11,6 +11,7 @@
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Price Fluctuation <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
       {% for card in cards %}
@@ -19,6 +20,7 @@
           <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
           <td>{{ card.avg|price }}</font></td>
         </td>
+        <td>{{ card|upordown|safe }}</td>
       {% endfor %}
       </tbody>
     </table>
