@@ -1,6 +1,7 @@
 {% include 'head.html' %}
 {% include 'menu.html' %}
 {% include 'googleChart.html' %}
+{% include 'googleChartTiny.html' %}
 {% load tools %}
 
 <div class="container">
@@ -80,6 +81,8 @@
       {% endif %}
       <img src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card' />
       <br><font size=1><i>All prices pulled from <a href='http://tcgplayer.com'>TCGPlayer.com</a></i></font>
+        
+        <div id="visualizationtiny" class="visible-phone" style="width: 250px; height: 200px;"></div>
     
     </td>
     

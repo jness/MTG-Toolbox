@@ -1,0 +1,26 @@
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load('visualization', '1', {packages: ['corechart']});
+  
+</script>
+<script type="text/javascript">
+  function drawVisualizationTiny() {
+    // Create and populate the data table.
+    var data = google.visualization.arrayToDataTable([
+      ['x', 'Avg'],
+      
+      {% for price in prices %}
+        ['{{ price.modified.month }}/{{ price.modified.day }}', {{ price.avg }},],
+      {% endfor %}
+        
+      ]);
+  
+    // Create and draw the visualization.
+    new google.visualization.LineChart(document.getElementById('visualizationtiny')).
+        draw(data, {curveType: "function",
+                    width: 250, height: 200}
+            );
+  }
+  
+   google.setOnLoadCallback(drawVisualizationTiny);
+</script>
