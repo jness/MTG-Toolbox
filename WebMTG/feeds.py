@@ -7,7 +7,7 @@ from WebMTG.models import MTGCard, MTGPrice
 class Top50Feed(Feed):
     title = "MTGToolbox 50 Most Expensive Cards"
     description = "MTGToolbox 50 Most Expensive Cards"
-    link = '/top/'
+    link = 'top/'
 
     def items(self):
         return MTGCard.objects.all().order_by('-avg')[0:50]
@@ -22,9 +22,9 @@ class Top50Feed(Feed):
         return "$%.2f on %s" % (round(item.avg,2), item.modified.ctime())
         
 class CardFeed(Feed):
-    title = 'Card Watch'
-    description = "Card Watch"
-    link = '/card/'
+    title = 'MTGToolbox Card Watch'
+    description = "MTGToolbox RSS Feed Card Watch"
+    link = '/'
     
     def get_object(self, request, id):
         return get_object_or_404(MTGCard, pk=id)
