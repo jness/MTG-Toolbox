@@ -24,7 +24,7 @@ class Top50Feed(Feed):
 class CardFeed(Feed):
     title = 'MTGToolbox Card Watch'
     description = "MTGToolbox RSS Feed Card Watch"
-    link = '/'
+    link = ''
     
     def get_object(self, request, id):
         return get_object_or_404(MTGCard, pk=id)
