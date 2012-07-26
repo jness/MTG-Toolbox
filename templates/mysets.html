@@ -15,7 +15,7 @@
       <tbody>
       {% for label, display_name, abbr in my_sets %}
         <tr>    
-          <td><a href='{% url card_set_view label %}'><b>{{ label }}</b></a></td>
+          <td><a href='{% url card_set_view label %}'>{{ label }}</a></td>
           <td><a href='{% url card_set_view label %}'>{{ display_name }}</a>
           {% if user.is_authenticated %}
             <a href='{% url add_card_view label %}'>

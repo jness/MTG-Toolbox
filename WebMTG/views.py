@@ -9,6 +9,7 @@ from TCGPlayer.Magic import Set, Card
 from magiccardsinfo.Set import Set as MagiccardsSet
 from magiccardsinfo.Card import Card as MagiccardsCard
 from magiccardsinfo.Identifiers import Identifiers
+from datetime import datetime
     
 class HomeView(BaseTemplateView):
     'View for the home page'
@@ -31,7 +32,7 @@ class TopToday(BaseTemplateView):
                                          created__year=l.year)
         
         self.context['cards'] = latest.order_by('-avg')[0:50]
-        return self.context    
+        return self.context
     
 class CardDecreasedToday(BaseTemplateView):
     'View for listing top 100 cards that have decreased from yesterday'
@@ -40,35 +41,81 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        down_cards = []
-        cards = MTGCard.objects.all()
-        for card in cards:
-            prices = MTGPrice.objects.filter(card=card).order_by('-created')[:2]
-            if len(prices) == 2:
-                if float(prices[0].avg) < float(prices[1].avg):
-                    increase = float(prices[1].avg) - float(prices[0].avg)
-                    down_cards.append((card, "%.2f" % round(increase,2)))
+        # see if we have two sets of data
+        try:
+            l = MTGPrice.objects.all().latest('created').created
+            latest = MTGPrice.objects.filter(created__day=l.day,
+                                             created__month=l.month,
+                                             created__year=l.year)
+            
+            pdate = datetime(l.year, l.month, l.day)
+            p = MTGPrice.objects.filter(created__lt=pdate).latest('created').created
+            prev = MTGPrice.objects.filter(created__day=p.day,
+                                           created__month=p.month,
+                                           created__year=p.year)
+        except:
+            return self.context
         
-        self.context['cards'] = down_cards[0:100]
+        down_cards = []
+        
+        for c in latest:
+            try:
+                latest_avg = c.avg
+                prev_avg = prev.get(card=c.card).avg
+            except:
+                continue
+            
+            if latest_avg < prev_avg:
+                
+                print prev_avg, latest_avg
+                
+                dif = float(prev_avg) - float(latest_avg)
+                down_cards.append((c.card, "%.2f" % round(dif,2)))
+        
+        down_cards.sort()
+        down_cards.reverse()
+        
+        self.context['cards'] = down_cards[0:50]
         return self.context    
 
 class CardIncreaseToday(BaseTemplateView):
-    'View for listing top 100 cards that have increased from yesterday'
+    'View for listing top 50 cards that have increased from yesterday'
     
     template_name = "increased.html"
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
+        # see if we have two sets of data
+        try:
+            l = MTGPrice.objects.all().latest('created').created
+            latest = MTGPrice.objects.filter(created__day=l.day,
+                                             created__month=l.month,
+                                             created__year=l.year)
+            
+            pdate = datetime(l.year, l.month, l.day)
+            p = MTGPrice.objects.filter(created__lt=pdate).latest('created').created
+            prev = MTGPrice.objects.filter(created__day=p.day,
+                                           created__month=p.month,
+                                           created__year=p.year)
+        except:
+            return self.context
+            
         up_cards = []
-        cards = MTGCard.objects.all()
-        for card in cards:
-            prices = MTGPrice.objects.filter(card=card).order_by('-created')[:2]
-            if len(prices) == 2:
-                if float(prices[0].avg) > float(prices[1].avg):
-                    increase = float(prices[0].avg) - float(prices[1].avg)
-                    up_cards.append((card, "%.2f" % round(increase,2)))
+        for c in latest:
+            try:
+                latest_avg = c.avg
+                prev_avg = prev.get(card=c.card).avg
+            except:
+                continue
+            
+            if latest_avg > prev_avg:
+                dif = float(latest_avg) - float(prev_avg)
+                up_cards.append((c.card, "%.2f" % round(dif,2)))
         
-        self.context['cards'] = up_cards[0:100]
+        up_cards.sort()
+        up_cards.reverse()
+        
+        self.context['cards'] = up_cards[0:50]
         return self.context
 
 class MySetView(BaseTemplateView):
