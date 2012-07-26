@@ -7,7 +7,7 @@
   function drawVisualization() {
     // Create and populate the data table.
     var data = google.visualization.arrayToDataTable([
-      ['x', 'Average Price'],
+      ['x', 'Average'],
       
       {% for price in prices %}
         ['{{ price.modified.month }}/{{ price.modified.day }}', {{ price.avg }},],
@@ -18,7 +18,7 @@
     // Create and draw the visualization.
     new google.visualization.LineChart(document.getElementById('visualization')).
         draw(data, {curveType: "function",
-                    width: 600, height: 300}
+                    width: 500, height: 300}
             );
   }
   
