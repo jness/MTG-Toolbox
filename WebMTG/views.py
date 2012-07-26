@@ -35,42 +35,23 @@ class TopToday(BaseTemplateView):
         return self.context
     
 class CardDecreasedToday(BaseTemplateView):
-    'View for listing top 100 cards that have decreased from yesterday'
+    'View for listing top 50 cards that have decreased from yesterday'
     
     template_name = "decreased.html"
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
-        
-        # see if we have two sets of data
-        try:
-            l = MTGPrice.objects.all().latest('created').created
-            latest = MTGPrice.objects.filter(created__day=l.day,
-                                             created__month=l.month,
-                                             created__year=l.year)
-            
-            pdate = datetime(l.year, l.month, l.day)
-            p = MTGPrice.objects.filter(created__lt=pdate).latest('created').created
-            prev = MTGPrice.objects.filter(created__day=p.day,
-                                           created__month=p.month,
-                                           created__year=p.year)
-        except:
-            return self.context
-        
+
         down_cards = []
-        
-        for c in latest:
+        cards = MTGCard.objects.all()
+        for card in cards:
             try:
-                latest_avg = c.avg
-                prev_avg = prev.get(card=c.card).avg
+                prev = MTGPrice.objects.filter(card=card).latest('created')
             except:
                 continue
             
-            if latest_avg < prev_avg:
-                
-                print prev_avg, latest_avg
-                
-                dif = float(prev_avg) - float(latest_avg)
-                down_cards.append((c.card, "%.2f" % round(dif,2)))
+            if card.avg < prev.avg:
+                dif = float(prev.avg) - float(card.avg)
+                down_cards.append((card, "%.2f" % round(dif,2)))
         
         down_cards.sort()
         down_cards.reverse()
@@ -84,33 +65,18 @@ class CardIncreaseToday(BaseTemplateView):
     template_name = "increased.html"
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
-        
-        # see if we have two sets of data
-        try:
-            l = MTGPrice.objects.all().latest('created').created
-            latest = MTGPrice.objects.filter(created__day=l.day,
-                                             created__month=l.month,
-                                             created__year=l.year)
-            
-            pdate = datetime(l.year, l.month, l.day)
-            p = MTGPrice.objects.filter(created__lt=pdate).latest('created').created
-            prev = MTGPrice.objects.filter(created__day=p.day,
-                                           created__month=p.month,
-                                           created__year=p.year)
-        except:
-            return self.context
-            
+                    
         up_cards = []
-        for c in latest:
+        cards = MTGCard.objects.all()
+        for card in cards:
             try:
-                latest_avg = c.avg
-                prev_avg = prev.get(card=c.card).avg
+                prev = MTGPrice.objects.filter(card=card).latest('created')
             except:
                 continue
             
-            if latest_avg > prev_avg:
-                dif = float(latest_avg) - float(prev_avg)
-                up_cards.append((c.card, "%.2f" % round(dif,2)))
+            if card.avg > prev.avg:
+                dif = float(card.avg) - float(prev.avg)
+                up_cards.append((card, "%.2f" % round(dif,2)))
         
         up_cards.sort()
         up_cards.reverse()
@@ -267,11 +233,6 @@ class AddCardView(BaseTemplateView):
             cards[card]['magiccard_id'] = magiccards_card['card_id']
             cards[card]['type'] = magiccards_card['type']
             cards[card]['rarity'] = magiccards_card['rarity']
-            
-            # remove prices from dict
-            del(cards[card]['low'])
-            del(cards[card]['avg'])
-            del(cards[card]['high'])
             
             c, created = MTGCard.objects.get_or_create(**cards[card])
             c.save()

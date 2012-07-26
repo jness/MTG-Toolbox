@@ -19,6 +19,9 @@ class MTGCard(models.Model):
     rarity = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
     set = models.ForeignKey(MTGSet)
+    low = models.DecimalField(decimal_places=2, max_digits=10)
+    avg = models.DecimalField(decimal_places=2, max_digits=10)
+    high = models.DecimalField(decimal_places=2, max_digits=10) 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     
