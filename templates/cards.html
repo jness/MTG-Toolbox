@@ -17,11 +17,16 @@
       <tbody>
       {% for card in cards %}
         <tr>       
-          <td><a class="hoverbox" onmouseover="this.children[0].src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card'"
-          href='{% url card_view id=card.id %}'>{{ card.card_name }}
-           <img class="preview" src='about:blank'>
-          </a></td>
+          <td>
           
+          <a class="visible-desktop hoverbox" onmouseover="this.children[0].src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card'"
+            href='{% url card_view id=card.id %}'>{{ card.card_name }}
+            <img class="preview" src='about:blank'>
+          </a>
+
+          <a class="visible-phone visible-tablet" href='{% url card_view id=card.id %}'>{{ card.card_name }}</a>
+          
+          </td>
           
           <td>{{ card.type }}</td>
           <td>

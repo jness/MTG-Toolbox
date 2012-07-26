@@ -31,10 +31,7 @@ p a:hover
 .hoverbox a:hover .preview
 {
         display: block;
-        position: inherit;
-	top: 0px;
-	left: 0px;
-        z-index: 1;
+        position: relative;
 }
 
 .hoverbox img
@@ -44,7 +41,6 @@ p a:hover
         border-width: 0px;
         color: inherit;
         padding: 2px;
-        vertical-align: top;
 }
 
 .hoverbox li
@@ -60,7 +56,6 @@ p a:hover
 .hoverbox .preview
 {
         border-color: #000;
-        width: 223px;
-        height: 310px;
+	width: 200px;
         background-color: white;
 }
