@@ -6,13 +6,14 @@
   <div class="content">
 
 <ul class="hoverbox">
+    <h3>{{ cards.0.set }}</h3>
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Type <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Price Fluctuation <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
       {% for card in cards %}
@@ -29,13 +30,13 @@
           </td>
           
           <td>{{ card.type }}</td>
-          <td>
+          <td class="hidden-phone">
             {% if card.avg %}
               {{ card.avg|price }}
             {% endif %}
           </td>
           <td>{{ card|upordown|safe }}</td>
-          <td>{{ card.set }}</td>
+          <td class="hidden-phone">{{ card.set }}</td>
         </td>
       {% endfor %}
       </tbody>

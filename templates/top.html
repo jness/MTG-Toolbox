@@ -5,13 +5,13 @@
 <div class="container">
   <div class="content">
     
-    <h2>50 Most Expensive Cards</h2>
+    <h3>50 Most Expensive Cards</h3>
     
   <ul class="hoverbox">
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Price Fluctuation <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
@@ -29,7 +29,7 @@
           
           </td>
           
-          <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
+          <td class="hidden-phone"><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
           <td>{{ card.avg|price }}</font></td>
         </td>
         <td>{{ card|upordown|safe }}</td>
