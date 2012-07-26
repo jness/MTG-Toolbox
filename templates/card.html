@@ -1,6 +1,7 @@
 {% include 'head.html' %}
 {% include 'menu.html' %}
 {% include 'googleChart.html' %}
+{% include 'googleChartSmall.html' %}
 {% load tools %}
 
 <div class="container">
@@ -79,24 +80,24 @@
         </table>
       {% endif %}
       <img src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card' />
+      <br><font size=1><i>All prices pulled from <a href='http://tcgplayer.com'>TCGPlayer.com</a></i></font>
+
+      <div id="visualizationsmall" class="hidden-desktop" style="width: 400px; height: 300px;">
+      </div>
     
-        <br><font size=1><i>All prices provided from <a href='http://tcgplayer.com'>TCGPlayer.com</a></i></font>
     </td>
     
-    <td align=center>
+    <td align=center class="visible-desktop">
       {% if prices %}
         <h4>Trending TCGPlayer Average Price</h4>
         <font size=1><i>updated @ {{ card.modified }} server time</i></font>
         <div id="visualization" style="width: 600px; height: 300px;"></div>
       {% endif %}
-      
-      {% if user.is_authenticated %}
-      <a class="btn btn-info" href="{% url get_card_view card.id %}">
-            <i class="icon-repeat icon-white"></i> Update Prices
-      </a>
-      {% endif %}
     </td>
+    
+    </tr>
   </table>
+  
     
   </div>
 </div>

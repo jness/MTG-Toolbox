@@ -1,13 +1,13 @@
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-  google.load('visualization', '1', {packages: ['corechart']});
+  google.load('visualizationsmall', '1', {packages: ['corechart']});
   
 </script>
 <script type="text/javascript">
-  function drawVisualization() {
+  function drawVisualizationSmall() {
     // Create and populate the data table.
     var data = google.visualization.arrayToDataTable([
-      ['x', 'Average Price'],
+      ['x', 'Avg'],
       
       {% for price in prices %}
         ['{{ price.modified.month }}/{{ price.modified.day }}', {{ price.avg }},],
@@ -16,11 +16,11 @@
       ]);
   
     // Create and draw the visualization.
-    new google.visualization.LineChart(document.getElementById('visualization')).
+    new google.visualization.LineChart(document.getElementById('visualizationsmall')).
         draw(data, {curveType: "function",
-                    width: 600, height: 300}
+                    width: 400, height: 300}
             );
   }
   
-   google.setOnLoadCallback(drawVisualization);
+   google.setOnLoadCallback(drawVisualizationSmall);
 </script>
