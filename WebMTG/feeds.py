@@ -30,15 +30,23 @@ class CardFeed(Feed):
         return get_object_or_404(MTGCard, pk=id)
 
     def items(self, obj):
-        prices = MTGCard.objects.filter(id=obj.id)
-        return prices
+        cdata = []
+        latest = MTGCard.objects.get(id=obj.id)
+        past = MTGPrice.objects.filter(card=latest).order_by('-created')
+        cdata.append(dict(card_name=latest.card_name, avg=latest.avg,
+                          modified=latest.modified, id=latest.id))
+        for p in past:
+            cdata.append(dict(card_name=p.card.card_name, avg=p.avg,
+                              modified=p.modified, id=p.id))
+        print cdata
+        return cdata
 
     def item_title(self, item):
-        return item.card_name
+        return item['card_name']
     
     def item_link(self, item):
-        return reverse('card_view', kwargs={'id': item.id})
+        return reverse('card_view', kwargs={'id': item['id']})
 
     def item_description(self, item):
-        return "$%.2f on %s" % (round(item.avg,2), item.modified.ctime())
+        return "$%.2f on %s" % (round(item['avg'],2), item['modified'].ctime())
         
