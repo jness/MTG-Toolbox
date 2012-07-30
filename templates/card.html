@@ -46,6 +46,7 @@
   
    <hr>
   <table cellpadding=5 cellspacing=5>
+    
     <tr>
       <td width=115><b>Gatherer:</b></td>
       <td><a href='http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid={{ card.gatherer_id }}'>{{ card.gatherer_id }}</td>
@@ -59,6 +60,11 @@
     <tr>
       <td><b>TCGPlayer:</b></td>
       <td><a href='http://store.tcgplayer.com/Product.aspx?id={{ card.tcgplayer_id }}'>{{ card.tcgplayer_id }}</td>
+    </tr>
+    
+    <tr>
+      <td width=115><b>API:</b></td>
+      <td><a href='http://mtgtoolbox.flip-edesign.com/api/v1/card/{{ card.id }}/?format=json'>{{ card.id }}</td>
     </tr>
     
   </table>
