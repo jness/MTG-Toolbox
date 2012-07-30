@@ -49,7 +49,7 @@ class CardDecreasedToday(BaseTemplateView):
                     prices.append((price, c))
             
             # cache prices if we ran it
-            cache.set(prices, prices, 3600)
+            cache.set('prices', prices, 3600)
         else:
             prices = cache.get('prices')
             
@@ -78,7 +78,7 @@ class CardIncreaseToday(BaseTemplateView):
                     prices.append((price, c))
                     
             # cache prices if we ran it
-            cache.set(prices, prices, 3600)
+            cache.set('prices', prices, 3600)
         else:
             prices = cache.get('prices')
             
