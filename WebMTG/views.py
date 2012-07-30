@@ -36,21 +36,20 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
 
-        if not cache.get('prices'):
+        if cache.get('prices'):
+            prices = cache.get('prices')
+        else:
             prices = []
             latest = MTGPrice.objects.latest('created').created
             cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
                                                                      latest.month,
                                                                      latest.day))
-            
             for c in cards:
                 price = c.card.avg - c.avg
                 prices.append((price, c))
             
             # cache prices if we ran it
             cache.set('prices', prices, 3600)
-        else:
-            prices = cache.get('prices')
             
         # be sure price is signed for negative
         prices = [ i for i in prices if i[0].is_signed ]
@@ -66,21 +65,20 @@ class CardIncreaseToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        if not cache.get('prices'):     
+        if cache.get('prices'):
+            prices = cache.get('prices')
+        else:
             prices = []
             latest = MTGPrice.objects.latest('created').created
             cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
                                                                      latest.month,
                                                                      latest.day))
-            
             for c in cards:
                 price = c.card.avg - c.avg
                 prices.append((price, c))
                     
             # cache prices if we ran it
             cache.set('prices', prices, 3600)
-        else:
-            prices = cache.get('prices')
         
         # be sure the price is not signed
         prices = [ i for i in prices if not i[0].is_signed ]
