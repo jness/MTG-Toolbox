@@ -1,8 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
-from django.core.cache import cache
-from django.views.decorators.cache import cache_page
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice
@@ -30,7 +28,6 @@ class TopToday(BaseTemplateView):
         self.context['cards'] = cards[0:50]
         return self.context
 
-@cache_page(60 * 60)
 class CardDecreasedToday(BaseTemplateView):
     'View for listing top 50 cards that have decreased from yesterday'
     
@@ -54,7 +51,6 @@ class CardDecreasedToday(BaseTemplateView):
         self.context['cards'] = prices[0:50]
         return self.context    
 
-@cache_page(60 * 60)
 class CardIncreaseToday(BaseTemplateView):
     'View for listing top 50 cards that have increased from yesterday'
     
