@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice
@@ -35,16 +36,22 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
 
-        prices = []
-        latest = MTGPrice.objects.latest('created').created
-        cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
-                                                                 latest.month,
-                                                                 latest.day))
-        
-        for c in cards:
-            price = c.card.avg - c.avg
-            if price.is_signed():
-                prices.append((price, c))
+        if not cache.get('prices'):
+            prices = []
+            latest = MTGPrice.objects.latest('created').created
+            cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
+                                                                     latest.month,
+                                                                     latest.day))
+            
+            for c in cards:
+                price = c.card.avg - c.avg
+                if price.is_signed():
+                    prices.append((price, c))
+            
+            # cache prices if we ran it
+            cache.set(prices, prices, 3600)
+        else:
+            prices = cache.get('prices')
             
         prices.sort()
         
@@ -57,17 +64,23 @@ class CardIncreaseToday(BaseTemplateView):
     template_name = "increased.html"
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
-                    
-        prices = []
-        latest = MTGPrice.objects.latest('created').created
-        cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
-                                                                 latest.month,
-                                                                 latest.day))
         
-        for c in cards:
-            price = c.card.avg - c.avg
-            if not price.is_signed():
-                prices.append((price, c))
+        if not cache.get('prices'):     
+            prices = []
+            latest = MTGPrice.objects.latest('created').created
+            cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
+                                                                     latest.month,
+                                                                     latest.day))
+            
+            for c in cards:
+                price = c.card.avg - c.avg
+                if not price.is_signed():
+                    prices.append((price, c))
+                    
+            # cache prices if we ran it
+            cache.set(prices, prices, 3600)
+        else:
+            prices = cache.get('prices')
             
         prices.sort()
         prices.reverse()
