@@ -9,7 +9,7 @@ from TCGPlayer.Magic import Set, Card
 from magiccardsinfo.Set import Set as MagiccardsSet
 from magiccardsinfo.Card import Card as MagiccardsCard
 from magiccardsinfo.Identifiers import Identifiers
-from datetime import datetime
+from datetime import datetime, date
     
 class HomeView(BaseTemplateView):
     'View for the home page'
@@ -35,22 +35,20 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
 
-        down_cards = []
-        cards = MTGCard.objects.all()
-        for card in cards:
-            try:
-                prev = MTGPrice.objects.filter(card=card).latest('created')
-            except:
-                continue
+        prices = []
+        latest = MTGPrice.objects.latest('created').created
+        cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
+                                                                 latest.month,
+                                                                 latest.day))
+        
+        for c in cards:
+            price = c.card.avg - c.avg
+            if price.is_signed():
+                prices.append((price, c))
             
-            if card.avg < prev.avg:
-                dif = float(prev.avg) - float(card.avg)
-                down_cards.append((card, dif))
+        prices.sort()
         
-        down_cards.sort()
-        down_cards.reverse()
-        
-        self.context['cards'] = down_cards[0:50]
+        self.context['cards'] = prices[0:50]
         return self.context    
 
 class CardIncreaseToday(BaseTemplateView):
@@ -60,23 +58,22 @@ class CardIncreaseToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
                     
-        up_cards = []
-        cards = MTGCard.objects.all()
-        for card in cards:
-            try:
-                prev = MTGPrice.objects.filter(card=card).latest('created')
-            except:
-                continue
+        prices = []
+        latest = MTGPrice.objects.latest('created').created
+        cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
+                                                                 latest.month,
+                                                                 latest.day))
+        
+        for c in cards:
+            price = c.card.avg - c.avg
+            if not price.is_signed():
+                prices.append((price, c))
             
-            if card.avg > prev.avg:
-                dif = float(card.avg) - float(prev.avg)
-                up_cards.append((card, dif))
+        prices.sort()
+        prices.reverse()
         
-        up_cards.sort()
-        up_cards.reverse()
-        
-        self.context['cards'] = up_cards[0:50]
-        return self.context
+        self.context['cards'] = prices[0:50]
+        return self.context   
 
 class MySetView(BaseTemplateView):
     'View for listing all sets you have imported from tcgplayer'

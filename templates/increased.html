@@ -11,13 +11,15 @@
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Increased By <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Price Flux <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
-      {% for card, value in cards %}
+      {% for value, card in cards %}
         <tr>       
-          <td><a href='{% url card_view id=card.id %}'>{{ card.card_name }}</a></td>
-          <td><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
+          <td><a href='{% url card_view id=card.card.id %}'>{{ card }}</a></td>
+          <td><a href='{% url card_set_view set=card.card.set.label %}'>{{ card.card.set }}</a></td>
           <td>{{ value|price }}</td>
+          <td><font size=1 color=#33CC33>Up</font> <i class=icon-arrow-up></i></td>
         </td>
       {% endfor %}
       </tbody>
