@@ -1,0 +1,116 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+
+    <div class="container">
+      <div class="content">
+
+<h1>API Usage</h1><br>
+
+<p>
+The MTGToolbox endpoint is configured for <b><a href="/api/v1?format=json">/api/v1/</a></b>,
+and uses a <a href="http://en.wikipedia.org/wiki/Representational_state_transfer">REST</a>ful API scheme.
+</p>
+  
+<h3>Fetching Data</h3><br>
+
+<i class=icon-arrow-right></i> First lets make a request to the endpoint:
+<pre>
+>>> from urllib2 import Request, urlopen
+>>> from json import loads
+>>>
+>>> rt = 'http://mtgtoolbox.flip-edesign.com'
+>>> endpoint = '/api/v1/'
+>>>
+>>> res = urlopen('%s%s' % (rt, endpoint)).read()
+>>> 
+>>> api = loads(res)
+</pre>
+<br>
+
+<i class=icon-arrow-right></i> Our endpoint will give us information on which models we can access:
+<pre>
+>>> api.keys()
+[u'set', u'card']
+</pre>
+<br>
+  
+<i class=icon-arrow-right></i> You can then use one of these model objects and get information about the endpoint or schema:
+<pre>
+>>> api['set']
+{u'list_endpoint': u'/api/v1/set/', u'schema': u'/api/v1/set/schema/'}
+>>> set_endpoint = api['set']['list_endpoint']
+</pre>
+<br>
+  
+<i class=icon-arrow-right></i> Now that we know where our set object is, we can request it:
+<pre>
+>>> res = urlopen('%s%s' % (rt, set_endpoint)).read()
+>>> set_api = loads(res)
+>>> set_api.keys()
+[u'meta', u'objects']
+</pre>
+<br>
+  
+<i class=icon-arrow-right></i> The meta key will give us useful information about this request:
+<pre>
+>>> set_api['meta']
+{u'previous': None, u'total_count': 2, u'offset': 0, u'limit': 20, u'next': None}
+</pre>
+<br>
+  
+<i class=icon-arrow-right></i> The meta data above told us there are 2 items in our object key, so lets look at the first one:
+<pre>
+>>> set_api['objects'][0]
+{u'display_name': u'Magic 2013 (M13)', u'created': u'2012-07-26T08:53:56.113858', u'modified': u'2012-07-26T08:53:56.113894', u'magiccards_info': u'm13', u'label': u'Magic 2013 (M13)', u'id': 1, u'resource_uri': u'/api/v1/set/1/'}
+</pre>
+<br>
+  
+<i class=icon-arrow-right></i> This dict object contains all the information about the given set, and can be easily accessed:
+<pre>
+>>> set_api['objects'][0]['id']
+1
+>>> set_api['objects'][0]['display_name']
+u'Magic 2013 (M13)'
+>>> set_api['objects'][0]['created']
+u'2012-07-26T08:53:56.113858'
+</pre>
+<br>
+
+<i class=icon-arrow-right></i> The objects key is always going to be a itterable object:
+<pre>
+>>> for set in set_api['objects']:
+...      print set['display_name']
+... 
+Magic 2013 (M13)
+Avacyn Restored
+</pre>
+<br>
+    
+<i class=icon-arrow-right></i> Using the card model is just like the set model:
+<pre>
+>>> card_endpoint = api['card']['list_endpoint']
+>>> 
+>>> res = urlopen('%s%s' % (rt, card_endpoint)).read()
+>>> card_api = loads(res)
+</pre>
+<br>
+
+<i class=icon-arrow-right></i> Our card model in this case has 230 objects:
+<pre> 
+>>> card_api['meta']
+{u'previous': None, u'total_count': 230, u'offset': 0, u'limit': 20, u'next': u'/api/v1/card/?limit=20&offset=20'}
+>>> 
+>>> card_api['objects'][0]
+{u'card_name': u'Duty-Bound Dead', u'rarity': u'B', u'magiccard_id': u'92', u'created': u'2012-07-26T08:55:26.760547', u'tcgplayer_id': 59966, u'modified': u'2012-07-28T19:58:37.220044', u'gatherer_id': 260988, u'high': u'0.5', u'cost': u'Common', u'low': u'0.03', u'avg': u'0.13', u'type': u'Creature - Skeleton', u'id': 1, u'resource_uri': u'/api/v1/card/1/'}
+>>>
+>>> card_api['objects'][0]['card_name']
+u'Duty-Bound Dead'
+>>> card_api['objects'][0]['set']
+{u'display_name': u'Magic 2013 (M13)', u'created': u'2012-07-26T08:53:56.113858', u'modified': u'2012-07-26T08:53:56.113894', u'magiccards_info': u'm13', u'label': u'Magic 2013 (M13)', u'id': 1, u'resource_uri': u'/api/v1/set/1/'}
+</pre>
+<br>
+      
+      </div>
+    </div>
+
+{% include 'foot.html' %}

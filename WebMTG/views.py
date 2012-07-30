@@ -19,6 +19,14 @@ class HomeView(BaseTemplateView):
         self.create_context(**kwargs)
         return self.context
     
+class ApiUsage(BaseTemplateView):
+    'View for the api usage page'
+    
+    template_name = "api_usage.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        return self.context
+    
 class TopToday(BaseTemplateView):
     'View for the top 50 expensive cards'
     template_name = "top.html"

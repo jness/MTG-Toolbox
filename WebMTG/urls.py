@@ -1,7 +1,7 @@
 from WebMTG.views import ShowSetView, AddSetView, MySetView, AddCardView
 from WebMTG.views import CardSetView, CardView, LogoutView, GetCardPrices
 from WebMTG.views import HomeView, CardIncreaseToday, CardDecreasedToday
-from WebMTG.views import TopToday
+from WebMTG.views import TopToday, ApiUsage
 
 from WebMTG.feeds import Top50Feed, CardFeed
 
@@ -9,7 +9,14 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
+from tastypie.api import Api
+from WebMTG.api import MTGCardResource, MTGSetResource
+
 admin.autodiscover()
+
+v1_api = Api(api_name='v1')
+v1_api.register(MTGCardResource())
+v1_api.register(MTGSetResource())
 
 urlpatterns = patterns('',
     url('^$', HomeView.as_view(), name='home_view'),
@@ -37,4 +44,8 @@ urlpatterns = patterns('',
     
     # Admin Page
     url(r'^admin/', include(admin.site.urls)),
+    
+    # API
+    url(r'^api_usage/$', ApiUsage.as_view(), name='api_usage'),
+    url(r'^api/', include(v1_api.urls)),
 )
