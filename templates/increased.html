@@ -5,25 +5,35 @@
 <div class="container">
   <div class="content">
     
+<ul class="hoverbox">
     <h2>Increasing Card Trends</h2>
     <table class="table table-striped" id="table">
       <thead><tr>
         <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
         <th><b>Increased By <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
-        <th><b>Price Flux <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Price Flux <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
       </tr></thead>
       <tbody>
       {% for value, card in cards %}
         <tr>       
-          <td><a href='{% url card_view id=card.card.id %}'>{{ card }}</a></td>
-          <td><a href='{% url card_set_view set=card.card.set.label %}'>{{ card.card.set }}</a></td>
+          <td>
+          <a class="visible-desktop hoverbox" onmouseover="this.children[0].src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.card.gatherer_id }}&type=card'"
+            href='{% url card_view id=card.card.id %}'>{{ card }}
+            <img class="preview" src='about:blank'>
+          </a>
+          
+          <a class="visible-phone visible-tablet" href='{% url card_view id=card.card.id %}'>{{ card }}</a>
+          </td>
+          
+          <td class="hidden-phone"><a href='{% url card_set_view set=card.card.set.label %}'>{{ card.card.set }}</a></td>
           <td>{{ value|price }}</td>
-          <td><font size=1 color=#33CC33>Up</font> <i class=icon-arrow-up></i></td>
+          <td class="hidden-phone"><font size=1 color=#33CC33>Up</font> <i class=icon-arrow-up></i></td>
         </td>
       {% endfor %}
       </tbody>
     </table>
+</ul>
     
   </div>
 </div>
