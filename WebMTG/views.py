@@ -52,7 +52,7 @@ class CardDecreasedToday(BaseTemplateView):
             cache.set('prices', prices, 3600)
             
         # be sure price is signed for negative
-        prices = [ i for i in prices if i[0].is_signed ]
+        prices = [ i for i in prices if i[0].is_signed() ]
         prices.sort()
         
         self.context['cards'] = prices[0:50]
@@ -81,7 +81,7 @@ class CardIncreaseToday(BaseTemplateView):
             cache.set('prices', prices, 3600)
         
         # be sure the price is not signed
-        prices = [ i for i in prices if not i[0].is_signed ]
+        prices = [ i for i in prices if not i[0].is_signed() ]
         prices.sort()
         prices.reverse()
         
