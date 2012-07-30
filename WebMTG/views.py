@@ -36,7 +36,7 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
 
-        if not cache.get('prices'):
+        if not cache.get('d_prices'):
             prices = []
             latest = MTGPrice.objects.latest('created').created
             cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
@@ -49,9 +49,9 @@ class CardDecreasedToday(BaseTemplateView):
                     prices.append((price, c))
             
             # cache prices if we ran it
-            cache.set('prices', prices, 3600)
+            cache.set('d_prices', prices, 3600)
         else:
-            prices = cache.get('prices')
+            prices = cache.get('d_prices')
             
         prices.sort()
         
@@ -65,7 +65,7 @@ class CardIncreaseToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        if not cache.get('prices'):     
+        if not cache.get('i_prices'):     
             prices = []
             latest = MTGPrice.objects.latest('created').created
             cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
@@ -78,9 +78,9 @@ class CardIncreaseToday(BaseTemplateView):
                     prices.append((price, c))
                     
             # cache prices if we ran it
-            cache.set('prices', prices, 3600)
+            cache.set('i_prices', prices, 3600)
         else:
-            prices = cache.get('prices')
+            prices = cache.get('i_prices')
             
         prices.sort()
         prices.reverse()
