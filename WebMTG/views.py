@@ -36,7 +36,7 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
 
-        if not cache.get('d_prices'):
+        if not cache.get('prices'):
             prices = []
             latest = MTGPrice.objects.latest('created').created
             cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
@@ -45,14 +45,15 @@ class CardDecreasedToday(BaseTemplateView):
             
             for c in cards:
                 price = c.card.avg - c.avg
-                if price.is_signed():
-                    prices.append((price, c))
+                prices.append((price, c))
             
             # cache prices if we ran it
-            cache.set('d_prices', prices, 3600)
+            cache.set('prices', prices, 3600)
         else:
-            prices = cache.get('d_prices')
+            prices = cache.get('prices')
             
+        # be sure price is signed for negative
+        prices = [ i for i in prices if i[0].is_signed ]
         prices.sort()
         
         self.context['cards'] = prices[0:50]
@@ -65,7 +66,7 @@ class CardIncreaseToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        if not cache.get('i_prices'):     
+        if not cache.get('prices'):     
             prices = []
             latest = MTGPrice.objects.latest('created').created
             cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
@@ -74,14 +75,15 @@ class CardIncreaseToday(BaseTemplateView):
             
             for c in cards:
                 price = c.card.avg - c.avg
-                if not price.is_signed():
-                    prices.append((price, c))
+                prices.append((price, c))
                     
             # cache prices if we ran it
-            cache.set('i_prices', prices, 3600)
+            cache.set('prices', prices, 3600)
         else:
-            prices = cache.get('i_prices')
-            
+            prices = cache.get('prices')
+        
+        # be sure the price is not signed
+        prices = [ i for i in prices if not i[0].is_signed ]
         prices.sort()
         prices.reverse()
         
