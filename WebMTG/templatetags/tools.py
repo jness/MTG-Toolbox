@@ -6,7 +6,7 @@ register = template.Library()
 
 @register.filter()
 def price(number):
-    p = "%.2f" % round(number,2)
+    p = "%.2f" % round(abs(number),2)
     return p
 
 @register.filter()
