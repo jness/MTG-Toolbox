@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice
@@ -43,20 +44,27 @@ class CardDecreasedToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
 
-        prices = []
-        latest = MTGPrice.objects.latest('created').created
-        cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
-                                                                 latest.month,
-                                                                 latest.day))
-        for c in cards:
-            price = c.card.avg - c.avg
-            prices.append((price, c))
+        if cache.get('dPrices'):
+            prices = cache.get('dPrices')
+        else:
+            prices = []
+            latest = MTGPrice.objects.latest('created').created
+            cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
+                                                                     latest.month,
+                                                                     latest.day))
+            for c in cards:
+                price = c.card.avg - c.avg
+                prices.append((price, c))
+                
+            # be sure price is signed for negative
+            prices = [ i for i in prices if i[0].is_signed() ]
+            prices.sort()
+            prices = prices[0:50]
             
-        # be sure price is signed for negative
-        prices = [ i for i in prices if i[0].is_signed() ]
-        prices.sort()
+            # cache the prices for next time
+            cache.set('dPrices', prices, 3600)
         
-        self.context['cards'] = prices[0:50]
+        self.context['cards'] = prices
         return self.context    
 
 class CardIncreaseToday(BaseTemplateView):
@@ -66,21 +74,28 @@ class CardIncreaseToday(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         
-        prices = []
-        latest = MTGPrice.objects.latest('created').created
-        cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
-                                                                 latest.month,
-                                                                 latest.day))
-        for c in cards:
-            price = c.card.avg - c.avg
-            prices.append((price, c))
-                
-        # be sure the price is not signed
-        prices = [ i for i in prices if not i[0].is_signed() ]
-        prices.sort()
-        prices.reverse()
+        if cache.get('iPrices'):
+            prices = cache.get('iPrices')
+        else:
+            prices = []
+            latest = MTGPrice.objects.latest('created').created
+            cards = MTGPrice.objects.filter(created__startswith=date(latest.year,
+                                                                     latest.month,
+                                                                     latest.day))
+            for c in cards:
+                price = c.card.avg - c.avg
+                prices.append((price, c))
+                    
+            # be sure the price is not signed
+            prices = [ i for i in prices if not i[0].is_signed() ]
+            prices.sort()
+            prices.reverse()
+            prices = prices[0:50]
+            
+            # cache the prices for next time
+            cache.set('iPrices', prices, 3600)
         
-        self.context['cards'] = prices[0:50]
+        self.context['cards'] = prices
         return self.context   
 
 class MySetView(BaseTemplateView):
