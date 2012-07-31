@@ -2,8 +2,14 @@ from django.core.management import setup_environ
 import settings
 setup_environ(settings)
 
+from django.core.cache import cache
 from WebMTG.models import MTGPrice, MTGCard, MTGSet
 from TCGPlayer.Magic import Card
+
+from datetime import datetime
+from urllib2 import urlopen
+
+print 'Started: %s' % datetime.now().ctime()
 
 sets = MTGSet.objects.all()
 
@@ -33,3 +39,13 @@ for set in sets:
         card.save()
     
         print 'Successfully updated Price database'
+        
+print 'Updating Caches'
+
+cache.delete('iPrices')
+cache.delete('dPrices')
+
+urlopen('http://mtgtoolbox.flip-edesign.com/increased/').read()
+urlopen('http://mtgtoolbox.flip-edesign.com/decreased/').read()
+
+print 'Ended: %s' % datetime.now().ctime()

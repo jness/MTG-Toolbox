@@ -62,7 +62,7 @@ class CardDecreasedToday(BaseTemplateView):
             prices = prices[0:50]
             
             # cache the prices for next time
-            cache.set('dPrices', prices, 3600)
+            cache.set('dPrices', prices, 86400)
         
         self.context['cards'] = prices
         return self.context    
@@ -93,7 +93,7 @@ class CardIncreaseToday(BaseTemplateView):
             prices = prices[0:50]
             
             # cache the prices for next time
-            cache.set('iPrices', prices, 3600)
+            cache.set('iPrices', prices, 86400)
         
         self.context['cards'] = prices
         return self.context   
