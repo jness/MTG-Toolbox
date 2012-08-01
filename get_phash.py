@@ -11,8 +11,8 @@ import pHash
 
 print 'Started: %s' % datetime.now().ctime()
 
-if not os.path.exists('tmp'):
-    os.mkdir('tmp')
+if not os.path.exists('gatherer_images'):
+    os.mkdir('gatherer_images')
 
 cards = MTGCard.objects.all()
 
@@ -22,12 +22,12 @@ for card in cards:
     try:
         MTGHash.objects.get(card=card)
     except:
-        url = 'http://magiccards.info/scans/en/%s/%s.jpg' % (card.set.magiccards_info,
-                                                             card.magiccard_id)
+        url = 'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%s&type=card' \
+                                                             % card.gatherer_id
         print 'Downloading Card Image for %s from %s' % (card, url)
         i = urlopen(url).read()
         
-        filename = 'tmp/%s.jpg' % card.magiccard_id
+        filename = 'tmp/%s.jpg' % card.gatherer_id
         f = open(filename, 'wb')
         f.write(i)
         f.close()
@@ -36,6 +36,7 @@ for card in cards:
         print 'Got %s for %s' % (h, card)
         
         MTGHash.objects.create(card=card, hash=h) # create object in DB
-        os.remove(filename) # delete the image file
     else:
         continue
+    
+    sys.exit()
