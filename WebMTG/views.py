@@ -128,7 +128,7 @@ class IdentifyCard(BaseTemplateView):
         matches = []
         for h in MTGHash.objects.all():
            s = pHash.hamming_distance(long(self.context['hash']), long(h.hash))
-           if s < 15:
+           if s <= 10:
               matches.append((h.card, s))
         
         self.context['matches'] = matches
