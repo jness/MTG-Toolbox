@@ -38,5 +38,3 @@ for card in cards:
         MTGHash.objects.create(card=card, hash=h) # create object in DB
     else:
         continue
-    
-    sys.exit()
