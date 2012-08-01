@@ -1,0 +1,40 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+{% load tools %}
+
+<div class="container">
+  <div class="content">
+    
+    <h3>Possible Matches for {{ hash }}</h3><br>
+    
+  <ul class="hoverbox">
+    <table class="table table-striped" id="table">
+      <thead><tr>
+        <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Hamming Distance <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+      </tr></thead>
+      <tbody>
+      {% for card, distance in matches %}
+        <tr>       
+          <td>
+            
+          <a class="visible-desktop hoverbox" onmouseover="this.children[0].src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card'"
+            href='{% url card_view id=card.id %}'>{{ card.card_name }}
+            <img class="preview" src='about:blank'>
+          </a>
+
+          <a class="visible-phone visible-tablet" href='{% url card_view id=card.id %}'>{{ card.card_name }}</a>
+          
+          </td>
+          
+          <td class="hidden-phone"><a href='{% url card_set_view set=card.set.label %}'>{{ card.set }}</a></td>
+        <td>{{ distance }}</td>
+      {% endfor %}
+      </tbody>
+    </table>
+  </ul>
+    
+  </div>
+</div>
+{% include 'foot_identify.html' %}

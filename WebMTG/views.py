@@ -11,6 +11,7 @@ from magiccardsinfo.Set import Set as MagiccardsSet
 from magiccardsinfo.Card import Card as MagiccardsCard
 from magiccardsinfo.Identifiers import Identifiers
 from datetime import datetime, date
+import pHash
     
 class HomeView(BaseTemplateView):
     'View for the home page'
@@ -115,6 +116,22 @@ class CardSetView(BaseTemplateView):
         db_set = MTGSet.objects.get(label=self.context['set'])
         cards = MTGCard.objects.filter(set=db_set)
         self.context['cards'] = cards
+        return self.context
+    
+class IdentifyCard(BaseTemplateView):
+    'Accept a Hash input and compare against our pHash'
+    
+    template_name = "identify.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        
+        matches = []
+        for h in MTGHash.objects.all():
+           s = pHash.hamming_distance(long(self.context['hash']), long(h.hash))
+           if s < 15:
+              matches.append((h.card, s))
+        
+        self.context['matches'] = matches
         return self.context
     
 class CardView(BaseTemplateView):

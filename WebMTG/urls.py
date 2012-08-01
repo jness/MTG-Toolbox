@@ -1,7 +1,7 @@
 from WebMTG.views import ShowSetView, AddSetView, MySetView, AddCardView
 from WebMTG.views import CardSetView, CardView, LogoutView, GetCardPrices
 from WebMTG.views import HomeView, CardIncreaseToday, CardDecreasedToday
-from WebMTG.views import TopToday, ApiUsage
+from WebMTG.views import TopToday, ApiUsage, IdentifyCard
 
 from WebMTG.feeds import Top50Feed, CardFeed
 
@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url('^cards/(?P<set>[\w :\'\.\-/"\(\)]+)/$', CardSetView.as_view(), name='card_set_view'),
     url('^card/(?P<id>[\d]+)/$', CardView.as_view(), name='card_view'),
     url(r'^logout/$', LogoutView.as_view(), name='logout_view'),
+    url(r'^identify/(?P<hash>[\d]+)/$', IdentifyCard.as_view(), name='identify_view'),
     
     # secure pages    
     url('^add_sets/$',
