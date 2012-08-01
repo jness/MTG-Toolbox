@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
-from WebMTG.models import MTGSet, MTGCard, MTGPrice
+from WebMTG.models import MTGSet, MTGCard, MTGPrice, MTGHash
 
 from TCGPlayer.Magic import Set, Card
 from magiccardsinfo.Set import Set as MagiccardsSet
@@ -124,6 +124,12 @@ class CardView(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         self.context['card'] = MTGCard.objects.get(id=self.context['id'])
+        try:
+            h = MTGHash.objects.get(card=self.context['card'])
+            self.context['card_hash'] = h.hash
+        except:
+            pass
+        
         prices = MTGPrice.objects.filter(card=self.context['card'])
         
         price_list = prices.order_by('-created')[:7]

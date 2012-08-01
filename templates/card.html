@@ -35,7 +35,7 @@
       <td><b>P/T:</b></td>
       <td>{{ card.power }} / {{ card.toughness }}</td>
     </tr>
-  {% endif %}
+    {% endif %}
   
     <tr>
       <td><b>Set:</b></td>
@@ -43,6 +43,16 @@
     </tr>
     
   </table>
+  
+  {% if card_hash %}
+   <hr>
+   <table cellpadding=5 cellspacing=5>
+    <tr>
+      <td><b>Card pHash</b></td>
+      <td>{{ card_hash }}</td>
+    </tr>
+   </table>
+  {% endif %}      
   
    <hr>
   <table cellpadding=5 cellspacing=5>

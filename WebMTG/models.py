@@ -39,3 +39,12 @@ class MTGPrice(models.Model):
     def __unicode__(self):
         return self.card.card_name
     
+class MTGHash(models.Model):
+    card = models.ForeignKey(MTGCard)
+    hash = models.CharField(max_length=30)
+    created = models.DateTimeField(auto_now=True)
+    modified = models.DateTimeField(auto_now=True)
+    
+    def __unicode__(self):
+        return self.card.card_name
+    
