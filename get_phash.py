@@ -27,7 +27,7 @@ for card in cards:
         print 'Downloading Card Image for %s from %s' % (card, url)
         i = urlopen(url).read()
         
-        filename = 'tmp/%s.jpg' % card.gatherer_id
+        filename = 'gatherer_images/%s.jpg' % card.gatherer_id
         f = open(filename, 'wb')
         f.write(i)
         f.close()
