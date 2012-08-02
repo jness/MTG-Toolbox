@@ -1,0 +1,48 @@
+{% include 'head.html' %}
+{% include 'menu.html' %}
+{% load tools %}
+
+<div class="container">
+  <div class="content">
+
+<ul class="hoverbox">
+    <h3>Search Results for "{{ user_input }}"</h3>
+    <table class="table table-striped" id="table">
+      <thead><tr>
+        <th><b>Name <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Type <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Average Price <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th><b>Price Flux <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+        <th class="hidden-phone"><b>Set <a href="#"><i class="icon-resize-vertical"></i></a></b></th>
+      </tr></thead>
+      <tbody>
+      {% for card in cards %}
+        <tr>       
+          <td>
+          
+          <a class="visible-desktop hoverbox" onmouseover="this.children[0].src='http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid={{ card.gatherer_id }}&type=card'"
+            href='{% url card_view id=card.id %}'>{{ card.card_name }}
+            <img class="preview" src='about:blank'>
+          </a>
+
+          <a class="visible-phone visible-tablet" href='{% url card_view id=card.id %}'>{{ card.card_name }}</a>
+          
+          </td>
+          
+          <td>{{ card.type }}</td>
+          <td class="hidden-phone">
+            {% if card.avg %}
+              {{ card.avg|price }}
+            {% endif %}
+          </td>
+          <td>{{ card|upordown|safe }}</td>
+          <td class="hidden-phone">{{ card.set }}</td>
+        </td>
+      {% endfor %}
+      </tbody>
+    </table>
+</ul>
+    
+  </div>
+</div>
+{% include 'foot.html' %}

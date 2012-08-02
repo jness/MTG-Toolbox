@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice, MTGHash
+from WebMTG.forms import SearchForm
 
 from TCGPlayer.Magic import Set, Card
 from magiccardsinfo.Set import Set as MagiccardsSet
@@ -27,6 +28,25 @@ class ApiUsage(BaseTemplateView):
     template_name = "api_usage.html"
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
+        return self.context
+    
+class Search(BaseTemplateView):
+    'Search Results'
+    
+    template_name = 'search.html'
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        if self.request.method == 'GET':
+            form = SearchForm(self.request.GET)
+            if form.is_valid():
+                input = form.clean().get('s')
+                c = MTGCard.objects.filter(card_name__contains=input)
+                self.context['cards'] = c
+                self.context['user_input'] = input
+        else:
+            form = SearchForm()
+            
+        self.context['form'] = form
         return self.context
     
 class TopToday(BaseTemplateView):

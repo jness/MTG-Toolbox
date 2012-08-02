@@ -9,15 +9,6 @@
           </a>
           <a class="brand" href='{% url home_view %}'>
 	  <font color=grey><i>[ <font size=2>Beta</font> ]</i></font> MTG Toolbox</a>
-
-	  {% if user.is_authenticated %}
-	    <p class="navbar-text pull-right"><font size=2>
-	    Welcome <b>{{ user }}</b></font>
-	    <a href='{% url logout_view %}'><i class="icon-remove icon-white"></i></a>
-	  {% else %}
-	    <p class="navbar-text pull-right">
-		  <a href='/admin'><font size=2>Login</font></a>
-	  {% endif %}
         </div>
         
         <div class="container">
@@ -28,14 +19,20 @@
       	     <li><a href="{% url show_set_view %}">Add Sets</a></li>
 	    {% endif %}
 	    <li><a href="{% url my_set_view %}">Sets</a></li>
-	    <li><a href="{% url top_view %}">50 Most Expensive</a></li>
-	    <li><a href="{% url increased_view %}">Increasing Trends</a></li>
-	    <li><a href="{% url decreased_view %}">Decreasing Trends</a></li>
+	    <li><a href="{% url top_view %}">Top 50</a></li>
+	    <li><a href="{% url increased_view %}">Increasing</a></li>
+	    <li><a href="{% url decreased_view %}">Decreasing</a></li>
 	    <li><a href="{% url api_usage %}">API</a></li>
-	    
-
 	  </ul>
-        </div>
+	</div>
+	  
+	    <div class="container">
+	       <ul class="nav">
+		<form action="{% url search_view %}" method="get">
+		  {{ form.s }}
+		</form>
+	    </ul>
+	  </div>
       
       </div>
     </div>
