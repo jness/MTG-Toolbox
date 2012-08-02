@@ -150,8 +150,8 @@ class CardView(BaseTemplateView):
         prices = MTGPrice.objects.filter(card=self.context['card'])
         
         price_list = prices.order_by('-created')[:7]
-        price_list = price_list.reverse()
         price_list = list(price_list)
+        price_list.reverse()
         # add our card to the price list
         price_list.append(self.context['card']) 
         self.context['prices'] = price_list
