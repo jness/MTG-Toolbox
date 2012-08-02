@@ -4,13 +4,13 @@
       google.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Date',  'Low', 'Avg', 'High'],
+          ['Date',  'High', 'Avg', 'Low'],
           
           {% for price in prices %}
             ['{{ price.modified.month }}/{{ price.modified.day }}',
-            {{ price.low }},
+            {{ price.high }},
             {{ price.avg }},
-            {{ price.high }},],
+            {{ price.low }},],
           {% endfor %}
         ]);
 
