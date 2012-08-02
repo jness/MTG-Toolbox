@@ -1,26 +1,26 @@
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-  google.load('visualization', '1', {packages: ['corechart']});
-  
-</script>
-<script type="text/javascript">
-  function drawVisualization() {
-    // Create and populate the data table.
-    var data = google.visualization.arrayToDataTable([
-      ['x', 'Average'],
-      
-      {% for price in prices %}
-        ['{{ price.modified.month }}/{{ price.modified.day }}', {{ price.avg }},],
-      {% endfor %}
-        
-      ]);
-  
-    // Create and draw the visualization.
-    new google.visualization.LineChart(document.getElementById('visualization')).
-        draw(data, {curveType: "function",
-                    width: 500, height: 300}
-            );
-  }
-  
-   google.setOnLoadCallback(drawVisualization);
+      google.load("visualization", "1", {packages:["corechart"], 'language': 'en'});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Date',  'Low', 'Avg', 'High'],
+          
+          {% for price in prices %}
+            ['{{ price.modified.month }}/{{ price.modified.day }}',
+            {{ price.low }},
+            {{ price.avg }},
+            {{ price.high }},],
+          {% endfor %}
+        ]);
+
+        var options = {
+          chartArea: {left:40,top:40,width:"75%",height:"75%"},
+          colors: ['grey', 'blue', 'green'],
+          isStacked: true,
+        };
+
+        var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
 </script>
