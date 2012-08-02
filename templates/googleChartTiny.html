@@ -4,21 +4,23 @@
       google.setOnLoadCallback(drawChartTiny);
       function drawChartTiny() {
         var data = google.visualization.arrayToDataTable([
-          ['Date',  'Avg'],
+          ['Date',  'Low', 'Avg', 'High'],
           
           {% for price in prices %}
             ['{{ price.modified.month }}/{{ price.modified.day }}',
-            {{ price.avg }},],
+            {{ price.low }},
+            {{ price.avg }},
+            {{ price.high }},],
           {% endfor %}
         ]);
 
         var options = {
           chartArea: {left:40,top:40,width:"60%",height:"60%"},
-          colors: ['green'],
+          colors: ['grey', 'blue', 'green'],
           isStacked: true,
         };
 
-        var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div_tiny'));
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div_tiny'));
         chart.draw(data, options);
       }
 </script>
