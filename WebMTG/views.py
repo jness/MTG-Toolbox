@@ -40,7 +40,7 @@ class Search(BaseTemplateView):
             form = SearchForm(self.request.GET)
             if form.is_valid():
                 input = form.clean().get('s')
-                c = MTGCard.objects.filter(card_name__contains=input)
+                c = MTGCard.objects.filter(card_name__icontains=input)
                 self.context['cards'] = c
                 self.context['user_input'] = input
         else:
