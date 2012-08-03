@@ -4,7 +4,7 @@
       google.setOnLoadCallback(drawChartTiny);
       function drawChartTiny() {
         var data = google.visualization.arrayToDataTable([
-          ['Date',  'Avg', 'Log'],
+          ['Date',  'Avg', 'Low'],
           
           {% for price in prices %}
             ['{{ price.modified.month }}/{{ price.modified.day }}',
