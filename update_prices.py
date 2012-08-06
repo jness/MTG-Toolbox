@@ -34,8 +34,7 @@ if now.day == 8:
     cards = MTGCard.objects.all()
     for card in cards:
         prices = MTGPrice.objects.filter(card=card,
-                                         created__month=lastmonth.month,
-                                         created__year=lastmonth.year)
+                                         created__lt=lastmonth)
         if prices:
             [ p.delete() for p in prices ]
             
