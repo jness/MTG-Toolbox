@@ -36,6 +36,9 @@ class MTGPrice(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
     
+    def __unicode__(self):
+        return self.card.card_name
+    
 class MTGPriceArchive(models.Model):
     card = models.ForeignKey(MTGCard)
     datelabel = models.CharField(max_length=12)
