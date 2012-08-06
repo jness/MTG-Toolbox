@@ -33,8 +33,15 @@ class MTGPrice(models.Model):
     low = models.DecimalField(decimal_places=2, max_digits=10)
     avg = models.DecimalField(decimal_places=2, max_digits=10)
     high = models.DecimalField(decimal_places=2, max_digits=10)
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
+    
+class MTGPriceArchive(models.Model):
+    card = models.ForeignKey(MTGCard)
+    datelabel = models.CharField(max_length=12)
+    avg = models.DecimalField(decimal_places=2, max_digits=10)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
         return self.card.card_name

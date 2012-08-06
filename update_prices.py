@@ -3,12 +3,42 @@ import settings
 setup_environ(settings)
 
 from django.core.cache import cache
-from WebMTG.models import MTGPrice, MTGCard, MTGSet
+from WebMTG.models import MTGPrice, MTGCard, MTGSet, MTGPriceArchive
 from TCGPlayer.Magic import Card
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib2 import urlopen
 
+# archive historic prices
+now = datetime.now()
+if now.day == 1:
+    print 'Running Archive for last month'
+    yesterday = now - timedelta(hours=24)
+    cards = MTGCard.objects.all()
+    for card in cards:
+        prices = MTGPrice.objects.filter(card=card)
+        if prices:
+            pricelist = [ p.avg for p in prices ]
+            avg = sum(pricelist) / len(pricelist)
+            
+            # Add to archive
+            datelabel = yesterday.strftime('%m/%Y')
+            MTGPriceArchive.objects.create(card=card,
+                                           datelabel=datelabel,
+                                           avg=avg)
+            
+# delete last months prices
+if now.day == 8:
+    print 'Running Cleanup for last month'
+    lastmonth = now - timedelta(hours=24*8)
+    cards = MTGCard.objects.all()
+    for card in cards:
+        prices = MTGPrice.objects.filter(card=card,
+                                         created__month=lastmonth.month,
+                                         created__year=lastmonth.year)
+        if prices:
+            [ p.delete() for p in prices ]
+            
 print 'Started: %s' % datetime.now().ctime()
 
 sets = MTGSet.objects.all()
@@ -38,7 +68,8 @@ for set in sets:
         card.high = prices['high']
         card.save()
     
-        print 'Successfully updated Price database'
+        print 'Successfully updated Price database'    
+    
         
 print 'Updating Caches'
 

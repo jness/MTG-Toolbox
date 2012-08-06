@@ -1,4 +1,4 @@
-from WebMTG.models import MTGCard, MTGSet, MTGPrice, MTGHash
+from WebMTG.models import MTGCard, MTGSet, MTGPrice, MTGHash, MTGPriceArchive
 from django.contrib import admin
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
@@ -11,4 +11,5 @@ admin.site.unregister(Group)
 admin.site.register(MTGSet)
 admin.site.register(MTGCard)
 admin.site.register(MTGPrice)
+admin.site.register(MTGPriceArchive)
 admin.site.register(MTGHash)
