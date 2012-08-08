@@ -33,8 +33,8 @@ class MTGPrice(models.Model):
     low = models.DecimalField(decimal_places=2, max_digits=10)
     avg = models.DecimalField(decimal_places=2, max_digits=10)
     high = models.DecimalField(decimal_places=2, max_digits=10)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField()
+    modified = models.DateTimeField()
     
     def __unicode__(self):
         return self.card.card_name
