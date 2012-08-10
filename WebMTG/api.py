@@ -15,7 +15,7 @@ class MTGCardResource(ModelResource):
         queryset = MTGCard.objects.all()
         resource_name = 'card'
         filtering = {
-                'card_name': ('exact', 'contains'),
+                'card_name': ('exact', 'contains', 'icontains'),
                 'set': ALL,
         }
         
