@@ -48,13 +48,14 @@ for set in sets:
     cards = MTGCard.objects.filter(set=set)
 
     for card in cards:
-        print 'Looking up price for %s in set %s' % (card.card_name, 
+        print 'Looking up price for %s in set %s' % (card.id, 
                                                      card.set.label)
         
         # get prices from TCGPlayer
         prices = c.getCard(card=card.card_name)
     
-        print 'Found the following prices %s' % prices
+        print 'Found prices: %s %s %s' % (prices['low'], prices['avg'],
+                                          prices['high'])
     
         # Move the card objects current prices to history
         MTGPrice.objects.create(card=card, low=card.low, avg=card.avg,
