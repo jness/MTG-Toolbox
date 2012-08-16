@@ -270,13 +270,14 @@ class AddCardView(BaseTemplateView):
             # Lookup card name on magiccards info
             name = cards[card]['card_name']
             try:
-                message = 'Found card %s on Magiccard Info' % name
-                messages.append(message)
                 magiccards_card = magiccards_set.getCard(name=name)
             except:
                 message = '!! Failed Magiccard Info lookup for %s !!' % name
                 messages.append(message)
                 continue
+            else:
+                message = 'Found card %s on Magiccard Info' % name
+                messages.append(message)
             
             # get card details from magiccards info
             i = Identifiers(set=db_set.magiccards_info,
