@@ -71,12 +71,12 @@ for set in sets:
         print 'Successfully updated Price database'    
     
         
-print 'Updating Caches'
-
-cache.delete('iPrices')
-cache.delete('dPrices')
-
-urlopen('http://mtgtoolbox.flip-edesign.com/increased/').read()
-urlopen('http://mtgtoolbox.flip-edesign.com/decreased/').read()
+#print 'Updating Caches'
+#
+#cache.delete('iPrices')
+#cache.delete('dPrices')
+#
+#urlopen('http://mtgtoolbox.flip-edesign.com/increased/').read()
+#urlopen('http://mtgtoolbox.flip-edesign.com/decreased/').read()
 
 print 'Ended: %s' % datetime.now().ctime()
