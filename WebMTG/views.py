@@ -334,6 +334,20 @@ class AddWatchView(BaseRedirectView):
                                 card=card, user=self.request.user)
         return reverse('watch_view')
     
+class RemoveWatchView(BaseRedirectView):
+    'Remove a card to your watched queue'
+    
+    permanent = False
+    query_string = True
+    def get_redirect_url(self, **kwargs):        
+        card = MTGCard.objects.get(id=kwargs['id'])           
+        if self.request.user.is_authenticated():
+            # add to Watch Queue
+            c, created = UserWatch.objects.get_or_create(
+                                card=card, user=self.request.user)
+            UserWatch.delete(c)
+        return reverse('watch_view')
+    
 class WatchView(BaseTemplateView):
     'View for listing all cards in your watch queue'
     

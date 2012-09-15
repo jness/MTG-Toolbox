@@ -13,7 +13,8 @@
   
   {% if user.is_authenticated %}
     {% if added %}
-      remove
+    <a href='{% url removewatch_view card.id %}'><img width=20 src=/static/images/remove.png>
+      <font size=1>Remove From Watch Queue</font></a>
     {% else %}
     <a href='{% url addwatch_view card.id %}'><img width=20 src=/static/images/add.png>
       <font size=1>Add to Watch Queue</font></a>

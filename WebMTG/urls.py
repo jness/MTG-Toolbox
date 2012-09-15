@@ -2,7 +2,7 @@ from WebMTG.views import ShowSetView, AddSetView, MySetView, AddCardView
 from WebMTG.views import CardSetView, CardView, LogoutView, GetCardPrices
 from WebMTG.views import HomeView, CardIncreaseToday, CardDecreasedToday
 from WebMTG.views import TopToday, ApiUsage, IdentifyCard, Search
-from WebMTG.views import AddWatchView, WatchView
+from WebMTG.views import AddWatchView, WatchView, RemoveWatchView
 
 from WebMTG.feeds import Top50Feed, CardFeed
 
@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^identify/(?P<hash>[\d]+)/$', IdentifyCard.as_view(), name='identify_view'),
     url('^search/$', Search.as_view(), name='search_view'),
     url('^addwatch/(?P<id>[\d]+)/$', AddWatchView.as_view(), name='addwatch_view'),
+    url('^removewatch/(?P<id>[\d]+)/$', RemoveWatchView.as_view(), name='watch_view'),
     url('^watch/$', WatchView.as_view(), name='watch_view'),
     
     # secure pages    
