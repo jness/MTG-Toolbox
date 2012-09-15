@@ -331,8 +331,8 @@ class WatchView(BaseTemplateView):
     def get_context_data(self, **kwargs):
         self.create_context(**kwargs)
         if self.request.user.is_authenticated():
-            cards = UserWatch.objects.filter(user=self.request.user)
-            self.context['cards'] = cards
+            user_cards = UserWatch.objects.filter(user=self.request.user)
+            self.context['cards'] = [ i.card for i in user_cards ]
         else:
             self.context['cards'] = []
         return self.context
