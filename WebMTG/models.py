@@ -64,4 +64,4 @@ class UserWatch(models.Model):
     user = models.ForeignKey(User)
     
     def __unicode__(self):
-        return self.user
+        return self.card.card_name
