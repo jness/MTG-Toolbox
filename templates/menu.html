@@ -17,10 +17,13 @@
 	   <!-- start menu bar entires -->
 	   {% if user.is_authenticated %}
       	     <li><a href="{% url show_set_view %}">Add Sets</a></li>
-	    {% endif %}
+           {% endif %}
 	    <li><a href="{% url my_set_view %}">Sets</a></li>
 	    <li><a href="{% url top_view %}">Top 50</a></li>
 	    <li><a href="{% url api_usage %}">API</a></li>
+	   {% if user.is_authenticated %}
+      	     <li><a href="{% url watch_view %}">Your Watch Queue</a></li>
+           {% endif %}
 	  </ul>
 	</div>
 	  
