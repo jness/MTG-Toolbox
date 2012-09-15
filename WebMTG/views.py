@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from WebMTG.__base import BaseTemplateView, BaseRedirectView
 from WebMTG.models import MTGSet, MTGCard, MTGPrice, MTGHash
+from WebMTG.models import UserWatch
 from WebMTG.forms import SearchForm
 
 from TCGPlayer.Magic import Set, Card
@@ -318,5 +319,20 @@ class AddWatchView(BaseRedirectView):
     def get_redirect_url(self, **kwargs):        
         card = MTGCard.objects.get(id=kwargs['id'])           
         if self.request.user.is_authenticated():
-            pass 
+            # add to Watch Queue
+            c, created = UserWatch.objects.get_or_create(
+                                card=card, user=self.request.user)
         return reverse('card_view', kwargs={'id': card.id})
+    
+class WatchView(BaseTemplateView):
+    'View for listing all cards in your watch queue'
+    
+    template_name = "cards.html"
+    def get_context_data(self, **kwargs):
+        self.create_context(**kwargs)
+        if self.request.user.is_authenticated():
+            cards = UserWatch.objects.filter(user=self.request.user)
+            self.context['cards'] = cards
+        else:
+            self.context['cards'] = []
+        return self.context
