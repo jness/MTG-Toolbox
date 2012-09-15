@@ -309,3 +309,15 @@ class LogoutView(BaseRedirectView):
             logout(self.request)
         
         return reverse('my_set_view')
+    
+class AddWatchView(BaseRedirectView):
+    'Add a card to your watched queue'
+    
+    permanent = False
+    query_string = True
+    def get_redirect_url(self, **kwargs):        
+        if self.request.user.is_authenticated():
+            card = MTGCard.objects.get(id=self.context['id'])           
+            logout(self.request)
+        
+        return reverse('card_view', kwargs={'id': card.id})
