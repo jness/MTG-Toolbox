@@ -12,7 +12,7 @@
   <font size=1>Follow RSS Feed</font></a>
   
   {% if user.is_authenticated %}
-    <a href='{% url addwatch_view card.id %}'>
+    <a href='{% url addwatch_view card.id %}'><img width=20 src=/static/images/add.png>
       <font size=1>Add to my watch queue.</font></a>
   {% endif %}
   
