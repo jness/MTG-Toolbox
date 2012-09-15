@@ -1,7 +1,7 @@
 from WebMTG.views import ShowSetView, AddSetView, MySetView, AddCardView
 from WebMTG.views import CardSetView, CardView, LogoutView, GetCardPrices
 from WebMTG.views import HomeView, CardIncreaseToday, CardDecreasedToday
-from WebMTG.views import TopToday, ApiUsage, IdentifyCard, Search
+from WebMTG.views import TopToday, ApiUsage, IdentifyCard, Search, AddWatchView
 
 from WebMTG.feeds import Top50Feed, CardFeed
 
