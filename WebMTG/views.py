@@ -176,6 +176,16 @@ class CardView(BaseTemplateView):
         # add our card to the price list
         price_list.append(self.context['card']) 
         self.context['prices'] = price_list
+
+        # see if in users queue        
+        if self.request.user.is_authenticated():
+            user_card = UserWatch.objects.filter(user=self.request.user,
+                                                 card=self.context['card'])
+            if user_card:
+                self.context['added'] = True
+            else:
+                self.context['added'] = False
+        
         return self.context
     
 class GetCardPrices(BaseRedirectView):
