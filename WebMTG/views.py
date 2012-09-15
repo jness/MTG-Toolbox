@@ -322,7 +322,7 @@ class AddWatchView(BaseRedirectView):
             # add to Watch Queue
             c, created = UserWatch.objects.get_or_create(
                                 card=card, user=self.request.user)
-        return reverse('card_view', kwargs={'id': card.id})
+        return reverse('watch_view')
     
 class WatchView(BaseTemplateView):
     'View for listing all cards in your watch queue'
