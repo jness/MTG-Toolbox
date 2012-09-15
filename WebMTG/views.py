@@ -316,8 +316,7 @@ class AddWatchView(BaseRedirectView):
     permanent = False
     query_string = True
     def get_redirect_url(self, **kwargs):        
+        card = MTGCard.objects.get(id=self.context['id'])           
         if self.request.user.is_authenticated():
-            card = MTGCard.objects.get(id=self.context['id'])           
-            logout(self.request)
-        
+            pass 
         return reverse('card_view', kwargs={'id': card.id})

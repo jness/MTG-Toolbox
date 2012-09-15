@@ -11,7 +11,10 @@
   <a href='{% url card_feed card.id %}'><img width=20 src=/static/images/rss.gif>
   <font size=1>Follow RSS Feed</font></a>
   
-  <a href='{% url addwatch_view card.id %}'>Watch Card</a>
+  {% if user.is_authenticated %}
+    <a href='{% url addwatch_view card.id %}'>
+      <font size=1>Add to my watch queue.</font></a>
+  {% endif %}
   
   <hr>
   <table cellpadding=5 cellspacing=5>
